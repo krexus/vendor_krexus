@@ -49,3 +49,9 @@ PRODUCT_COPY_FILES += \
     vendor/krexus/prebuilt/common/addon.d/50-krexus.sh:system/addon.d/50-krexus.sh \
     vendor/krexus/prebuilt/common/bin/backuptool.sh:system/bin/backuptool.sh \
     vendor/krexus/prebuilt/common/bin/backuptool.functions:system/bin/backuptool.functions
+
+# init.d script support
+PRODUCT_COPY_FILES += \
+    vendor/krexus/prebuilt/common/bin/sysinit:system/bin/sysinit \
+    vendor/krexus/prebuilt/common/root/init.d.rc:root/init.d.rc \
+    vendor/krexus/prebuilt/common/etc/init.d/00banner:system/etc/init.d/00banner
