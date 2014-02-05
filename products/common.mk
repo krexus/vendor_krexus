@@ -3,6 +3,7 @@ PRODUCT_BRAND ?= krexus
 PRODUCT_PROPERTY_OVERRIDES += \
     keyguard.no_require_sim=true \
     net.tethering.noprovisioning=true \
+    persist.sys.dun.override=0 \
     ro.url.legal=http://www.google.com/intl/%s/mobile/android/basic/phone-legal.html \
     ro.url.legal.android_privacy=http://www.google.com/intl/%s/mobile/android/basic/privacy.html \
     ro.com.google.clientidbase=android-google \
