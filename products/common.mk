@@ -17,9 +17,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 ifneq ($(filter icarus_hammerhead icarus_mako,$(TARGET_PRODUCT)),)
 PRODUCT_PACKAGES += \
     Launcher3
-# Auto-rotate
-PRODUCT_PACKAGE_OVERLAYS += \
-    vendor/icarus/overlay/Launcher3
 endif
 
 # Common overlay
