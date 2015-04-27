@@ -6,4 +6,5 @@ BOARD_SEPOLICY_DIRS += \
     vendor/icarus/sepolicy
 
 BOARD_SEPOLICY_UNION += \
-    file_contexts 
+    file_contexts \
+    shell.te

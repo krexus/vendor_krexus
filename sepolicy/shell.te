@@ -1,0 +1,2 @@
+#Addresses AVC devial
+allow shell dalvikcache_data_file:file write;
