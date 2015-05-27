@@ -8,5 +8,7 @@
 
     <!-- Non Market Apps -->
     <bool name="def_install_non_market_apps">true</bool>
-    
+
+    <!-- Disable "vibrate on touch" -->
+    <bool name="def_haptic_feedback">false</bool>
 </resources>
