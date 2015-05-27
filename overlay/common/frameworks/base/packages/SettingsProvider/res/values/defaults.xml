@@ -5,4 +5,6 @@
     <bool name="def_backup_enabled">true</bool>
     <string name="def_backup_transport">com.google.android.backup/.BackupTransportService</string>
 
+    <!-- Non Market Apps -->
+    <bool name="def_install_non_market_apps">true</bool>
 </resources>
