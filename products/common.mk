@@ -12,6 +12,11 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.setupwizard.enterprise_mode=1 \
     ro.com.android.dateformat=MM-dd-yyyy \
     ro.com.android.dataroaming=false
+    
+#Icarus build.prop overrides
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.setupwizard.network_required=false \
+    ro.setupwizard.gservices_delay=-1
 
 # Launcher3 supported devices
 ifneq ($(filter icarus_hammerhead icarus_mako,$(TARGET_PRODUCT)),)
