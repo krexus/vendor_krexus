@@ -10,4 +10,8 @@
     
     <!-- Haptic Feedback -->
     <bool name="def_haptic_feedback">false</bool>
+    
+    <!-- Animation scales (Development Settings) -->
+    <fraction name="def_window_animation_scale">75%</fraction>
+    <fraction name="def_window_transition_scale">75%</fraction>
 </resources>
