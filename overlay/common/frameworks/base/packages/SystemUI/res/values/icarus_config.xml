@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <!-- quick QuickSettings pulldown:
+        0: disabled
+        1: same side as the clock / signal cluster view (old: right)
+        2: opposite of the clock / signal cluster view (old: left)
+    -->
+    <integer name="config_quick_qs_pulldown">1</integer>
+
+     <!-- Enable the Advanced Location tile in QuickSettings -->
+    <bool name="config_qs_advancedlocation">true</bool>
+
+    <!-- Show the disconnected bluetooth icon -->
+    <bool name="config_show_disconnected_bluetooth">false</bool>
+
+</resources>
