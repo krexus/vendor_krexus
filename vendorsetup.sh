@@ -1,2 +1,3 @@
 add_lunch_combo icarus_hammerhead-user
 add_lunch_combo icarus_mako-user
+add_lunch_combo icarus_shamu-user
