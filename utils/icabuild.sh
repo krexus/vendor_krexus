@@ -13,5 +13,5 @@ source build/envsetup.sh
 echo "${green}Changelog is enabled (by default)${reset}"
 
 #enable Prebuilt Chromium
-export USE_PREBUILT_CHROMIUM=1
-echo "${green}Prebuilt Chromium will be used${reset}"
+#export USE_PREBUILT_CHROMIUM=1
+#echo "${green}Prebuilt Chromium will be used${reset}"
