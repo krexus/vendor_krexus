@@ -46,3 +46,9 @@ PRODUCT_COPY_FILES += \
 ifeq ($(PRODUCT_PREBUILT_WEBVIEWCHROMIUM),yes)
 -include prebuilts/chromium/$(TARGET_DEVICE)/chromium_prebuilt.mk
 endif
+
+# Backuptool Support
+PRODUCT_COPY_FILES += \
+    vendor/icarus/prebuilt/common/addon.d/50-icarus.sh:system/addon.d/50-icarus.sh \
+    vendor/icarus/prebuilt/common/bin/backuptool.sh:system/bin/backuptool.sh \
+    vendor/icarus/prebuilt/common/bin/backuptool.functions:system/bin/backuptool.functions \
