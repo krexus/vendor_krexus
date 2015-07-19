@@ -40,7 +40,7 @@ endif
 
 # Latin IME lib
 PRODUCT_COPY_FILES += \
-    vendor/icarus/proprietary/common/system/lib/libjni_latinime.so:system/lib/libjni_latinime.so
+    vendor/icarus/prebuilt/common/system/lib/libjni_latinime.so:system/lib/libjni_latinime.so
     
 # Chromium Prebuilt
 ifeq ($(PRODUCT_PREBUILT_WEBVIEWCHROMIUM),yes)

@@ -2,8 +2,8 @@
 
 # media effects
 PRODUCT_COPY_FILES +=  \
-    vendor/icarus/proprietary/common/vendor/media/LMspeed_508.emd:system/vendor/media/LMspeed_508.emd \
-    vendor/icarus/proprietary/common/vendor/media/PFFprec_600.emd:system/vendor/media/PFFprec_600.emd
+    vendor/icarus/prebuilt/common/vendor/media/LMspeed_508.emd:system/vendor/media/LMspeed_508.emd \
+    vendor/icarus/prebuilt/common/vendor/media/PFFprec_600.emd:system/vendor/media/PFFprec_600.emd
 
 # video files
 $(call inherit-product-if-exists, frameworks/base/data/videos/VideoPackage2.mk)
