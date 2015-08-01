@@ -18,18 +18,13 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.setupwizard.network_required=false \
     ro.setupwizard.gservices_delay=-1
 
-# Launcher3 supported devices
-ifneq ($(filter icarus_hammerhead icarus_mako,$(TARGET_PRODUCT)),)
-PRODUCT_PACKAGES += \
-    Launcher3
-endif
 
 # Common overlay
 PRODUCT_PACKAGE_OVERLAYS += vendor/icarus/overlay/common
 
-# Enable SIP+VoIP on all targets
-PRODUCT_COPY_FILES += \
-    frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml
+#Extra Packages
+PRODUCT_PACKAGES += \
+    Launcher3 
 
 # STK: overlay common to all devices with telephony
 ifneq ($(filter icarus_hammerhead icarus_mako icarus_shamu,$(TARGET_PRODUCT)),)
@@ -41,6 +36,10 @@ endif
 # Latin IME lib
 PRODUCT_COPY_FILES += \
     vendor/icarus/prebuilt/common/system/lib/libjni_latinime.so:system/lib/libjni_latinime.so
+
+# Enable SIP+VoIP on all targets
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml
     
 # Chromium Prebuilt
 ifeq ($(PRODUCT_PREBUILT_WEBVIEWCHROMIUM),yes)
