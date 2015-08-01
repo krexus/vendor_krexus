@@ -24,7 +24,8 @@ PRODUCT_PACKAGE_OVERLAYS += vendor/icarus/overlay/common
 
 #Extra Packages
 PRODUCT_PACKAGES += \
-    Launcher3 
+    Launcher3 \
+    WallpaperPicker
 
 # STK: overlay common to all devices with telephony
 ifneq ($(filter icarus_hammerhead icarus_mako icarus_shamu,$(TARGET_PRODUCT)),)
