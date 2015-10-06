@@ -20,7 +20,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.setupwizard.gservices_delay=-1
 
 # Common overlay
-PRODUCT_PACKAGE_OVERLAYS += vendor/icarus/overlay/common
+PRODUCT_PACKAGE_OVERLAYS += vendor/krexus/overlay/common
 
 #Extra Packages
 PRODUCT_PACKAGES += \
@@ -36,7 +36,7 @@ endif
 
 # Latin IME lib
 PRODUCT_COPY_FILES += \
-    vendor/icarus/prebuilt/common/system/lib/libjni_latinime.so:system/lib/libjni_latinime.so
+    vendor/krexus/prebuilt/common/system/lib/libjni_latinime.so:system/lib/libjni_latinime.so
 
 # Enable SIP+VoIP on all targets
 PRODUCT_COPY_FILES += \
@@ -49,6 +49,6 @@ endif
 
 # Backuptool Support
 PRODUCT_COPY_FILES += \
-    vendor/icarus/prebuilt/common/addon.d/50-icarus.sh:system/addon.d/50-icarus.sh \
-    vendor/icarus/prebuilt/common/bin/backuptool.sh:system/bin/backuptool.sh \
-    vendor/icarus/prebuilt/common/bin/backuptool.functions:system/bin/backuptool.functions \
+    vendor/krexus/prebuilt/common/addon.d/50-icarus.sh:system/addon.d/50-icarus.sh \
+    vendor/krexus/prebuilt/common/bin/backuptool.sh:system/bin/backuptool.sh \
+    vendor/krexus/prebuilt/common/bin/backuptool.functions:system/bin/backuptool.functions \

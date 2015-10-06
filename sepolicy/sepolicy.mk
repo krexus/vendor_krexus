@@ -3,7 +3,7 @@
 #
 
 BOARD_SEPOLICY_DIRS += \
-    vendor/icarus/sepolicy
+    vendor/krexus/sepolicy
 
 BOARD_SEPOLICY_UNION += \
     file_contexts \

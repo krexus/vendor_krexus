@@ -2,7 +2,7 @@
 $(call inherit-product, device/moto/shamu/aosp_shamu.mk)
 
 # Inherit common product files.
-$(call inherit-product, vendor/icarus/products/common.mk)
+$(call inherit-product, vendor/krexus/products/common.mk)
 
 # Setup device specific product configuration.
 PRODUCT_NAME := icarus_shamu
@@ -18,4 +18,4 @@ PRODUCT_BUILD_PROP_OVERRIDES += \
     PRIVATE_BUILD_DESC="shamu-user 5.1.1 LYZ28E 1914015 release-keys"
 
 # Inherit media effect blobs
--include vendor/icarus/products/common_media_effects.mk
+-include vendor/krexus/products/common_media_effects.mk
