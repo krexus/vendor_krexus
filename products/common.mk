@@ -19,7 +19,11 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Common overlay
 PRODUCT_PACKAGE_OVERLAYS += vendor/krexus/overlay/common
 
-#Extra Packages
+# Bootanimation
+PRODUCT_COPY_FILES += \
+        vendor/krexus/prebuilt/$(TARGET_DEVICE)/bootanimation.zip:system/media/bootanimation.zip
+
+# Extra Packages
 PRODUCT_PACKAGES += \
     Launcher3 \
     WallpaperPicker \
