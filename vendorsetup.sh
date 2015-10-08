@@ -1,0 +1,2 @@
+add_lunch_combo krexus_hammerhead-user
+add_lunch_combo krexus_mako-user
