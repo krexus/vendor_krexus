@@ -15,6 +15,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.com.android.dataroaming=false
     ro.setupwizard.network_required=false \
     ro.setupwizard.gservices_delay=-1
+    ro.adb.secure=1
 
 # Common overlay
 PRODUCT_PACKAGE_OVERLAYS += vendor/krexus/overlay/common
