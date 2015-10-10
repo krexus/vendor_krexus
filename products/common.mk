@@ -11,10 +11,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.com.android.wifi-watchlist=GoogleGuest \
     ro.setupwizard.enterprise_mode=1 \
     ro.com.android.dateformat=MM-dd-yyyy \
-    ro.com.android.mobiledata=false
-    ro.com.android.dataroaming=false
+    ro.com.android.mobiledata=false \
+    ro.com.android.dataroaming=false \
     ro.setupwizard.network_required=false \
-    ro.setupwizard.gservices_delay=-1
+    ro.setupwizard.gservices_delay=-1 \
     ro.adb.secure=1
 
 # Common overlay
@@ -28,7 +28,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     Launcher3 \
     WallpaperPicker \
-    Stk
+    Stk 
 
 # Latin IME lib
 PRODUCT_COPY_FILES += \
@@ -42,7 +42,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     vendor/krexus/prebuilt/common/addon.d/50-krexus.sh:system/addon.d/50-krexus.sh \
     vendor/krexus/prebuilt/common/bin/backuptool.sh:system/bin/backuptool.sh \
-    vendor/krexus/prebuilt/common/bin/backuptool.functions:system/bin/backuptool.functions \
+    vendor/krexus/prebuilt/common/bin/backuptool.functions:system/bin/backuptool.functions
     
 # Blobs necessary for media effects
 # media effects
