@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- BackUp -->
+    <!-- Google Backup Transport Service-->
     <bool name="def_backup_enabled">true</bool>
-    <string name="def_backup_transport">com.google.android.backup/.BackupTransportService</string>
+    <string name="def_backup_transport">com.google.android.gms/.backup.BackupTransportService</string>
 
 
     <!-- Non Market Apps -->
@@ -15,4 +15,4 @@
     <!-- Animation scales (Development Settings) -->
     <fraction name="def_window_animation_scale">75%</fraction>
     <fraction name="def_window_transition_scale">75%</fraction>
-</resources>
+</resources> 
