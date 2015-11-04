@@ -28,6 +28,7 @@ endif
 
 # Extra Packages
 PRODUCT_PACKAGES += \
+    Busybox \
     Launcher3 \
     WallpaperPicker \
     Stk 
