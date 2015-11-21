@@ -32,17 +32,36 @@ function afh-upload() {
     loadvariables
     printf "Uploading to Android File host (FTP)..."
     echo
-    ncftpput -f ~/.afh-credentials.cfg / $otalocation
+    ncftpput -f ~/.ftp-credentials.cfg / $otalocation
     printf "Notifying Pushbullet devices..."
     . $pushbullet push all link "Upload complete: $otapackage" "www.androidfilehost.com"
     }
 
+function afh-upload() {
+    loadvariables
+    printf "Uploading to Android File host (FTP)..."
+    echo
+    ncftpput -f ~/.ftp-credentials.cfg / $otalocation
+    printf "Notifying Pushbullet devices..."
+    . $pushbullet push all link "Upload complete: $otapackage" "www.androidfilehost.com"
+    }
+
+function basket-upload() {
+    loadvariables
+    printf "Uploading to BasketBuild (FTP)..."
+    echo
+    ncftpput -f ~/.ftp-credentials.cfg /Krexus/$TARGET_DEVICE $otalocation
+    printf "Notifying Pushbullet devices..."
+    . $pushbullet push all link "Upload complete: $otapackage" "www.basketbuild.com"
+    }
+
 function pushupload() {
 #Quoting the variable because it may be empty
-    if [ "$1" == afh  ]
-    then
-    pushbullet && afh-upload
+    if [ "$1" == afh  ]; then
+    	pushbullet && afh-upload
+    elif [ "$1" == basket ]; then
+    	pushbullet && basket-upload
     else
-    pushbullet && zippy-upload
+    	pushbullet && zippy-upload
     fi
     }
