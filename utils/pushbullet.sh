@@ -1,19 +1,24 @@
 #! /bin/bash
 
 # Bash interface to the PushBullet api.
-
 # Author: Red5d - https://github.com/Red5d
-
-
-if [ ! -n "$PB_CONFIG" ]; then
-	PB_CONFIG=~/.config/pushbullet
-fi
-source $PB_CONFIG > /dev/null 2>&1
 
 API_URL=https://api.pushbullet.com/v2
 PROGDIR="$(cd "$( dirname "$0" )" && pwd )"
 
-if [ -z "$PB_API_KEY" ]; then
+if [ ! $(which curl) ]; then
+	echo "pushbullet-bash requires curl to run. Please install curl"
+	exit 1
+fi
+
+# override default PB_CONFIG if different file or API key has been given
+if [[ ! -n "$PB_CONFIG" ]] && [[ ! -n "$PB_API_KEY" ]]; then
+	PB_CONFIG=~/.config/pushbullet
+fi
+source $PB_CONFIG > /dev/null 2>&1
+
+# don't give warning when script is called with setup option
+if [[ -z "$PB_API_KEY" ]] && [[ "$1" != "setup" ]]; then
 	echo -e "\e[0;33mWarning, your API key is not set.\nPlease create \"$PB_CONFIG\" with a line starting with PB_API_KEY= and your PushBullet key\e[00m"
 	exit 1
 fi
@@ -21,31 +26,28 @@ fi
 printUsage() {
 echo "Usage: pushbullet <action> <device> <type> <data>
 
-Actions: 
-list - Lists all devices in your PushBullet account. (does not require
+Actions:
+list - List all devices and contacts in your PushBullet account. (does not require
        additional parameters)
-push - Pushes data to a device. (the device name can simply be a unique part of
-       the name that \"list\" returns)
-pushes active - Get your 'active' pushes (pushes that haven't been deleted) 
-delete $iden - Deletes a push, you must give the push 'iden', see https://docs.pushbullet.com/v2/pushes/
-delete all - Deletes all pushes
+push - Push data to a device or contact. (the device name can simply be
+       a unique part of the name that \"list\" returns)
+pushes active - List your 'active' pushes (pushes that haven't been deleted).
+delete \$iden - Delete a specific push.
+delete except \$number - Delete all pushes except the last \$number.
+delete all - Delete all pushes.
+setup - Use OAuth to retrieve a PushBullet API key for pushbullet-bash.
 
 Types: 
 note
-address
-list
-file
 link
+file
 
 Type Parameters: 
 (all parameters must be put inside quotes if more than one word)
-\"note\" type: 	give the title, then the note text. The note text can also be
-                given via stdin, leaving the note text field empty.
-\"address\" type: give the address name, then the address or Google Maps query.
-\"list\" type: 	give the name of the list, then each of the list items,
-                separated by spaces.
-\"file\" type: 	give the path to the file.
-\"link\" type: 	give the title of the link then the url and the the message body
+\"note\" type: 	give the title and an optional message body.
+\"link\" type: 	give the title of the link, an optional message and the url.
+\"file\" type: 	give the path to the file and an optional message body.
+Hint:  The message body can also be given via stdin, leaving the message parameter empty.
 "
 exit 1
 }
@@ -57,35 +59,41 @@ function getactivepushes () {
 		iden=$(echo "$allpushes" | grep "^\[\"pushes\",$id,\"iden\"\]"|cut -f 2)
 		title=$(echo "$allpushes" | grep "^\[\"pushes\",$id,\"title\"\]"|cut -f 2)
 		if [[ -z "$title" ]]; then
-			echo "(no title) $iden"
-		else
-			echo "$title $iden"
+			title="(no title)"
 		fi
+		echo "$title $iden"
 	done
 }
 
 checkCurlOutput() {
 	res=$(echo "$1" | grep -o "created" | tail -n1)
-	if [[ "$res" != "created" ]]; then
-		echo "Error submitting the request. The POST error message was:"
+	if [[ "$1" == *"The param 'channel_tag' has an invalid value."* ]] && [[ "$1" == *"The param 'device_iden' has an invalid value."* ]]; then
+		echo "Error: You specified an unknown device or channel."
+		exit 1
+	elif [[ "$res" != "created" ]] && [[ ! "$1" == "{}" ]]; then
+		echo "Error submitting the request. The error message was:" $1
 		exit 1
 	fi
-	echo " Done."
-} 
+	echo "Success"
+}
 
 case $1 in
 list)
 	echo "Available devices:"
 	echo "------------------"
-	curl -s "$API_URL/devices" -u "$PB_API_KEY": | tr ',' '\n' | grep nickname | cut -d '"' -f4
+	curl -s "$API_URL/devices" -H "Access-Token: $PB_API_KEY" -H "Content-Type: application/json" | tr ',' '\n' | grep \"nickname\" | sort -n | cut -d '"' -f4
 	echo "all"
+	echo
+	echo "Contacts:"
+	echo "------------------"
+	curl -s "$API_URL/contacts" -H "Access-Token: $PB_API_KEY" -H "Content-Type: application/json" | tr ',' '\n' | grep \"email\" | sort -n | cut -d '"' -f4
 	;;
 pushes)
 	case $2 in
 	active)
 		echo "Your active pushes:"
 		echo "------------------"
-		curl -s "$API_URL/pushes?active=true" -u "$PB_API_KEY": | getactivepushes
+		curl -s "$API_URL/pushes?active=true" -H "Access-Token: $PB_API_KEY" -H "Content-Type: application/json" | getactivepushes
 		;;
 	*)
 		printUsage
@@ -99,124 +107,134 @@ delete)
 		;;
 	all)
 		echo "deleting all pushes"
-		curlres=$(curl -s "$API_URL/pushes" -u "$PB_API_KEY": -X DELETE)
-		if [ ! "$curlres" == '{}' ]; then
-			echo "something went wrong"
-			exit 1
+		curlres=$(curl -s "$API_URL/pushes" -H "Access-Token: $PB_API_KEY" -H "Content-Type: application/json" -X DELETE)
+		checkCurlOutput "$curlres"
+		;;
+	except)
+		# test if $3 is not empty and a number
+		if [ -z "${3##*[!0-9]}" ]; then
+			printUsage
 		fi
+		echo "deleting all pushes except the last $3"
+		number=$(($3+1))
+		allpushes=$(curl -s "$API_URL/pushes?active=true" -H "Access-Token: $PB_API_KEY" -H "Content-Type: application/json" | "$PROGDIR"/JSON.sh -l)
+		activepushes=$(echo "$allpushes" | egrep "\[\"pushes\",[0-9]+,\"active\"\].*true"|while read line; do echo "$line"|cut -f 2 -d ,; done | tail -n "+$number")
+		for id in $activepushes; do
+			iden=$(echo "$allpushes" | grep "^\[\"pushes\",$id,\"iden\"\]"|cut -f 2 | cut -d'"' -f 2)
+			$0 delete $iden
+		done
 		;;
 	*)
-		echo "deleting only $2"
-		curlres=$(curl -s "$API_URL/pushes/$2" -u "$PB_API_KEY": -X DELETE)
-		if [ ! "$curlres" == '{}' ]; then
-			echo "something went wrong"
-			exit 1
-		fi
+		echo "deleting $2"
+		curlres=$(curl -s "$API_URL/pushes/$2" -H "Access-Token: $PB_API_KEY" -H "Content-Type: application/json" -X DELETE)
+		checkCurlOutput "$curlres"
 		;;
 	esac
-        ;;
+		;;
 push)
 	if [ -z "$2" ]; then
 		printUsage
 	fi
-	curlres=$(curl -s "$API_URL/devices" -u "$PB_API_KEY":)
-	devices=$(echo "$curlres" | tr '{' '\n' | tr ',' '\n' | grep nickname | cut -d'"' -f4)
-	idens=$(echo "$curlres" | tr '{' '\n' | grep active\"\:true |  tr ',' '\n' | grep iden | cut -d'"' -f4)
+	curlres=$(curl -s "$API_URL/devices" -H "Access-Token: $PB_API_KEY" -H "Content-Type: application/json" )
+	devices=$(echo "$curlres" | tr '{' '\n' | tr ',' '\n' | grep \"nickname\" | cut -d'"' -f4)
+	idens=$(echo "$curlres" | tr '{' '\n' | grep active\"\:true | tr ',' '\n' | grep iden | cut -d'"' -f4)
 	lineNum=$(echo "$devices" | grep -i -n "$2" | cut -d: -f1)
 	dev_id=$(echo "$idens" | sed -n $lineNum'p')
 
+	title="$4"
+	body=""
+	if [ ! -t 0 ]; then
+		# we have something on stdin
+		body=$(cat)
+		# remove unprintable characters, or pushbullet API fails
+		body=$(echo "$body"|tr -dc '[:print:]\n')
+	fi
+
+	if [[ $5 == http://* ]] || [[ $5 == https://* ]]; then
+		url="$5"
+	else
+		body="$5"
+		url="$6"
+	fi
+
+	# replace newlines with an escape sequence
+	body="${body//$'\n'/\n}"
+
 	case $3 in
 	note)
-		body=""
-		if [ ! -t 0 ]; then
-			# we have something on stdin
-			body=$(cat)
-			# remove unprintable characters, or pushbullet API fails
-			body=$(echo "$body"|tr -dc '[:print:]\n')
-		fi
-		if [ ! -z "$5" ]; then
-			body="$5"
-		fi
-		if [ "$2" = "all" ]; then
-			curlres=$(curl -s "$API_URL/pushes" -u "$PB_API_KEY": -d type=note -d title="$4" --data-urlencode body="$body" -X POST)
-		elif [[ "$2" == *@* ]]; then
-			curlres=$(curl -s "$API_URL/pushes" -u "$PB_API_KEY": -d email="$2" -d type=note -d title="$4" --data-urlencode body="$body" -X POST)
-		else
-			curlres=$(curl -s "$API_URL/pushes" -u "$PB_API_KEY": -d device_iden="$dev_id" -d type=note -d title="$4" --data-urlencode body="$body" -X POST)
-		fi
-		checkCurlOutput "$curlres"
+		type=note
+		json="{\"type\":\"$type\",\"title\":\"$title\",\"body\":\"$body\""
 	;;
-	address)
-		curlres=$(curl -s "$API_URL/pushes" -u "$PB_API_KEY": -d device_iden="$dev_id" -d type=address -d name="$4" -d address="$5" -X POST)
-		checkCurlOutput "$curlres"
-	;;
-	list)
-		# print all array items after $4, convert them to a JSON array
-		# URLencoded data requests do not work for lists at the moment 
-		itemlist=$(printf '%s\n' "${@:5}" \
-			| awk ' BEGIN { ORS = ""; print "["; } { print "/@"$0"/@"; } END { print "]"; }' \
-			| sed "s^\"^\\\\\"^g;s^\/\@\/\@^\", \"^g;s^\/\@^\"^g")
-		if [ "$2" = "all" ]; then
-		  JsonData='{"type": "list", "title": "'"$4"'", "items": '"$itemlist"'}'
-		else
-		  JsonData='{"type": "list", "device_iden": "'"$dev_id"'", "title":"'"$4"'", "items":'"$itemlist"'}'
+	link)
+		type=link
+		if [[ ! $url == http://* ]] && [[ ! $url == https://* ]]; then
+			echo "Error: A valid link has to start with http:// or https://"
+			exit 1
 		fi
-		curlres=$(curl -s $API_URL/pushes -u "$PB_API_KEY": -X POST \
-		  --header 'Content-Type: application/json' --data-binary "$JsonData")
-		checkCurlOutput "$curlres"
+		json="{\"type\":\"$type\",\"title\":\"$title\",\"body\":\"$body\",\"url\":\"$url\""
 	;;
-
 	file)
+		if [[ -z $4 ]] || [[ ! -f $4 ]]; then
+			echo "Error: no valid file to push was specified"
+			exit 1
+		fi
 		# Api docs: https://docs.pushbullet.com/v2/upload-request/
 		mimetype=$(file -i -b $4)
-		curlres=$(curl -s "$API_URL/upload-request" -u "$PB_API_KEY":  -d file_name=$4 -d file_type=${mimetype%:*} -X POST)
-		#echo $curlres | "$PROGDIR"/JSON.sh -b
-		curlres2=$(curl -s -i $(echo $curlres | "$PROGDIR"/JSON.sh -b | grep upload_url |awk -F\" '{print $(NF-1)}') -X POST  \
-		-F awsaccesskeyid=$(echo $curlres | "$PROGDIR"/JSON.sh -b | grep awsaccesskeyid |awk -F\" '{print $(NF-1)}') \
-		-F acl=$(echo $curlres | "$PROGDIR"/JSON.sh -b | grep acl | awk -F\" '{print $(NF-1)}') \
-		-F key=$(echo $curlres | "$PROGDIR"/JSON.sh -b | grep key | tail -1 | awk -F\" '{print $(NF-1)}') \
-		-F signature=$(echo $curlres | "$PROGDIR"/JSON.sh -b | grep signature | awk -F\" '{print $(NF-1)}') \
-		-F policy=$(echo $curlres | "$PROGDIR"/JSON.sh -b | grep policy | awk -F\" '{print $(NF-1)}') \
-		-F content-type=$(echo $curlres | "$PROGDIR"/JSON.sh -b | grep content-type | awk -F\" '{print $(NF-1)}') \
-		-F file=@$4)
-		if [ "$2" = "all" ]; then
-			curlres=$(curl -s "$API_URL/pushes" -u "$PB_API_KEY": -F type=file \
-			-F file_name=$(echo $curlres | "$PROGDIR"/JSON.sh -b | grep file_name |awk -F\" '{print $(NF-1)}') \
-			-F file_type=$(echo $curlres | "$PROGDIR"/JSON.sh -b | grep file_type |awk -F\" '{print $(NF-1)}') \
-			-F file_url=$(echo $curlres | "$PROGDIR"/JSON.sh -b | grep file_url |awk -F\" '{print $(NF-1)}') \
-			-X POST)
-		elif [[ "$2" == *@* ]]; then
-			curlres=$(curl -s "$API_URL/pushes" -u "$PB_API_KEY": -F email="$2" -F type=file \
-			-F file_name=$(echo $curlres | "$PROGDIR"/JSON.sh -b | grep file_name |awk -F\" '{print $(NF-1)}') \
-			-F file_type=$(echo $curlres | "$PROGDIR"/JSON.sh -b | grep file_type |awk -F\" '{print $(NF-1)}') \
-			-F file_url=$(echo $curlres | "$PROGDIR"/JSON.sh -b | grep file_url |awk -F\" '{print $(NF-1)}') \
-			-X POST)
-		else
-			curlres=$(curl -s "$API_URL/pushes" -u "$PB_API_KEY": -F device_iden="$dev_id" -F type=file \
-			-F file_name=$(echo $curlres | "$PROGDIR"/JSON.sh -b | grep file_name |awk -F\" '{print $(NF-1)}') \
-			-F file_type=$(echo $curlres | "$PROGDIR"/JSON.sh -b | grep file_type |awk -F\" '{print $(NF-1)}') \
-			-F file_url=$(echo $curlres | "$PROGDIR"/JSON.sh -b | grep file_url |awk -F\" '{print $(NF-1)}') \
-			-X POST)
-		fi
-		checkCurlOutput "$curlres"
-	;;
+		curlres=$(curl -s "$API_URL/upload-request" -H "Access-Token: $PB_API_KEY" -H "Content-Type: application/json" \
+		--data-binary "{\"file_name\":\"$4\",\"file_type\":\"${mimetype%:*}\"}" -X POST)
+		curlres2=$(curl -s -i -X POST $(echo $curlres | "$PROGDIR"/JSON.sh -b | grep upload_url |awk -F\" '{print $(NF-1)}') -F file=@$4)
 
-	link)
-		if [ "$2" = "all" ]; then
-			curlres=$(curl -s "$API_URL/pushes" -u "$PB_API_KEY": -d type=link -d title="$4" -d url="$5" -d body="$6" -X POST)
-		else
-			curlres=$(curl -s "$API_URL/pushes" -u "$PB_API_KEY": -d device_iden="$dev_id" -d type=link -d title="$4" -d url="$5" -d body="$6" -X POST)
-		fi
-		checkCurlOutput "$curlres"
+		type=file
+		file_name=$(echo $curlres | "$PROGDIR"/JSON.sh -b | grep file_name |awk -F\" '{print $(NF-1)}')
+		file_type=$(echo $curlres | "$PROGDIR"/JSON.sh -b | grep file_type |awk -F\" '{print $(NF-1)}')
+		file_url=$(echo $curlres | "$PROGDIR"/JSON.sh -b | grep file_url |awk -F\" '{print $(NF-1)}')
+		json="{\"type\":\"$type\",\"title\":\"$title\",\"body\":\"$body\",\"file_name\":\"$file_name\",\"file_type\":\"$file_type\",\"file_url\":\"$file_url\""
 	;;
-
 	*)
 		printUsage
 	;;
 	esac
-;;
 
+	if [ "$2" = "all" ]; then
+		echo "Sending to All Devices"
+		json="$json}"
+	# $2 must be a contact/an email address if it contains an @.
+	elif [[ "$2" == *@* ]]; then
+		echo "Sending to email address $2"
+		json="$json,\"email\":\"$2\"}"
+	# $2 must be a channel_tag if $lineNum is empty.
+	elif [ -z "$lineNum" ]; then
+		echo "Sending to channel $2"
+		json="$json,\"channel_tag\":\"$2\"}"
+	# in all other cases $2 must be the identifier of a device.
+	else
+		echo "Sending to device $2"
+		json="$json,\"device_iden\":\"$dev_id\"}"
+	fi
+	curlres=$(curl -s "$API_URL/pushes" -H "Access-Token: $PB_API_KEY" -H "Content-type: application/json" --data-binary "$json" -X POST)
+	checkCurlOutput "$curlres"
+;;
+setup)
+	CLIENT_ID=u1DAx9KcrmMRUjhcMb3qWOZluwE2MjKa
+	REDIRECT_URI="https%3A%2F%2Ffbartels.github.io%2Fpushbullet-bash"
+	OAUTH_URL="https://www.pushbullet.com/authorize?client_id=$CLIENT_ID&redirect_uri=$REDIRECT_URI&response_type=token&scope=everything"
+	echo
+	echo "Please open the following URL manually if it did not open automatically:"
+	echo
+	echo "$OAUTH_URL"
+	echo
+	echo "Before continuing you need to save your newly created token in $PB_CONFIG"
+
+	if [ "$(uname)" == "Darwin" ]; then
+		open "$OAUTH_URL"
+	else
+		xdg-open "$OAUTH_URL" &> /dev/null
+	fi
+;;
+ratelimit)
+	curl -i -H "Access-Token: $PB_API_KEY" -H "Content-Type: application/json" https://api.pushbullet.com/v2/users/me -sw '%{http_code}'
+;;
 *)
 	printUsage
-	;;
+;;
 esac
