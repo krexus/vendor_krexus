@@ -8,3 +8,12 @@ reset=`tput sgr0`
 
 #sourcing envsetup
 source build/envsetup.sh
+
+function release() {
+   readarray -t vendorsetups < vendor/krexus/vendorsetup.sh
+   for command in "${vendorsetups[@]}"; do
+        setup=$( echo $command | cut -d ' ' -f 2 )
+        lunch $setup && mka otapackage && pushupload basket
+   done
+   pushbullet channel
+}
