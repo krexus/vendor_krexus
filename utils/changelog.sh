@@ -1,7 +1,6 @@
 #!/bin/sh
 
 # Exports
-
 export Changelog=Changelog.txt
 
 if [ -f $Changelog ];
@@ -11,7 +10,7 @@ fi
 
 touch $Changelog
 
-for i in $(seq 5);
+for i in $(seq 7);
 do
 export After_Date=`date --date="$i days ago" +%m-%d-%Y`
 k=$(expr $i - 1)
@@ -19,8 +18,8 @@ k=$(expr $i - 1)
 
   # Line with after --- until was too long for a small ListView
   echo '====================' >> $Changelog;
-  echo  "     "$Until_Date       >> $Changelog;
-  echo '===================='  >> $Changelog;
+  echo  "     "$Until_Date    >> $Changelog;
+  echo '====================' >> $Changelog;
   echo >> $Changelog;
 
   # Cycle through every repo to find commits between 2 dates
@@ -32,4 +31,3 @@ sed -i 's/project/   */g' $Changelog
 
 cp $Changelog $OUT/system/etc/
 cp $Changelog $OUT/
-rm $Changelog
