@@ -14,20 +14,34 @@
 #     See the License for the specific language governing permissions and
 #     limitations under the License.
 
-# Version: 0.1
+# Version: 0.2
 # dependencies: git
 # Info: Enhanced cd command for git repos
+# Notice: For better looking results, color the header output of git status: "git config color.status.header green"
 
 function cdb() {
 	if [[ $# -eq 0 ]]; then
 		echo "cdb: ERROR, no directory specified"
 	else
+	    # Check root directory (works for HOME "~")
+	    if [ "$(echo $1 | cut -d "/" -f2)" ]; then
+		rootdir=$(echo $1 | cut -d "/" -f2);
+	    fi
+	    if [ "$(echo $1 | cut -d "/" -f1)" ]; then
+		rootdir=$(echo $1 | cut -d "/" -f1);
+	    fi
+	    #Check if the specified directory is a child of the source directory (where you would normally be when you use the cdb() command)
+ 	    rootdirfound=$( ls -a | grep $rootdir )
+	    if [ "$rootdirfound" ]; then
+		#Check if the folder is a git repo
 		gitfound=$( ls -a ./$1 | grep .git )
 		cd $1
 		if [ "$gitfound" ]; then
-			# echo "Success, git found"
-			git status # "status" gives out more information AND the current branch
+		    git status # "status" gives out more information AND the current branch
 		fi
+	    else
+		cd $1
+	    fi
 	fi
 }
 
