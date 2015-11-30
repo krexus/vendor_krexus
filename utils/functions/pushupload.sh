@@ -56,15 +56,21 @@ function pushupload() {
 }
 
 function ftp-upload() {
-	prepare
-	ncftpput -f ~/.$service-credentials.cfg -b / $otalocation
-	$pushbullet push all link "Upload complete: $otapackage" "$link"
+    prepare
+    ncftpput -f ~/.$service-credentials.cfg -b $dir $otalocation
+    if [ $? -eq 0 ]; then
+      $pushbullet push all link "Upload complete: $otapackage" "$link"
+    else
+      echo "Upload for $TARGET_DEVICE failed. Please re-try manually!"
+    fi
+
 }
 
 function afh-upload() {
     printmessage="Android File host (FTP)..."
     link="http://www.androidfilehost.com"
     service="afh"
+    dir="/"
     ftp-upload
     }
 
@@ -72,6 +78,7 @@ function basket-upload() {
     printmessage="BasketBuild (FTP)..."
     link="https://basketbuild.com/devs/KreAch3R/Krexus"
     service="basket"
+    dir="/Krexus/$TARGET_DEVICE"
     ftp-upload
     }
 
