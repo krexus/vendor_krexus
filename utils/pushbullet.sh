@@ -74,7 +74,7 @@ checkCurlOutput() {
 		echo "Error submitting the request. The error message was:" $1
 		exit 1
 	fi
-	echo "Success"
+	echo "`tput setaf 2`Success!`tput sgr0`"
 }
 
 case $1 in
@@ -196,19 +196,19 @@ push)
 	esac
 
 	if [ "$2" = "all" ]; then
-		echo "Sending to All Devices"
+		echo "`tput setaf 2`Pushbullet`tput sgr0`: sending to all devices..."
 		json="$json}"
 	# $2 must be a contact/an email address if it contains an @.
 	elif [[ "$2" == *@* ]]; then
-		echo "Sending to email address $2"
+		echo "`tput setaf 2`Pushbullet`tput sgr0`: sending to email address $2"
 		json="$json,\"email\":\"$2\"}"
 	# $2 must be a channel_tag if $lineNum is empty.
 	elif [ -z "$lineNum" ]; then
-		echo "Sending to channel $2"
+		echo "`tput setaf 2`Pushbullet`tput sgr0`: sending to channel $2"
 		json="$json,\"channel_tag\":\"$2\"}"
 	# in all other cases $2 must be the identifier of a device.
 	else
-		echo "Sending to device $2"
+		echo "`tput setaf 2`Pushbullet`tput sgr0`: sending to device $2"
 		json="$json,\"device_iden\":\"$dev_id\"}"
 	fi
 	curlres=$(curl -s "$API_URL/pushes" -H "Access-Token: $PB_API_KEY" -H "Content-type: application/json" --data-binary "$json" -X POST)

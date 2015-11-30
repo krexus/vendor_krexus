@@ -15,7 +15,7 @@
 #     limitations under the License.
 
 
-# Version: 3.1
+# Version: 3.9
 # dependencies:
 # plowshare: https://github.com/mcrapet/plowshare
 # pushbullet-bash: https://github.com/Red5d/pushbullet-bash
@@ -32,6 +32,11 @@ otalocation=$(find $OUT -maxdepth 1 -type f -name "*.zip" | xargs ls -t | head -
 otapackage=$(basename $otalocation)
 }
 
+function prepare() {
+	loadvariables
+	echo "`tput setaf 3`Uploading to $printmessage`tput sgr0`"
+}
+
 function pushbullet() {
     loadvariables
     if [ "$1" == channel ]; then
@@ -41,38 +46,39 @@ function pushbullet() {
     fi
     }
 
+function pushupload() {
+# Quoting the variable because it may be empty
+    if [[ $# -eq 0 ]]; then
+    	pushbullet && zippy-upload
+    else
+    	pushbullet && $1-upload
+    fi
+}
+
+function ftp-upload() {
+	prepare
+	ncftpput -f ~/.$service-credentials.cfg -b / $otalocation
+	$pushbullet push all link "Upload complete: $otapackage" "$link"
+}
+
+function afh-upload() {
+    printmessage="Android File host (FTP)..."
+    link="http://www.androidfilehost.com"
+    service="afh"
+    ftp-upload
+    }
+
+function basket-upload() {
+    printmessage="BasketBuild (FTP)..."
+    link="https://basketbuild.com/devs/KreAch3R/Krexus"
+    service="basket"
+    ftp-upload
+    }
+
 function zippy-upload() {
-    loadvariables
-    printf "Uploading to Zippyshare..."
-    echo
+    printmessage="Zippyshare..."
+    prepare
     exec 5>&1
     local upload_url=$(plowup zippyshare --max-rate 90k $otalocation | tee >(cat - >&5))
     $pushbullet push all link "Upload complete: $otapackage" $upload_url
     }
-
-function afh-upload() {
-    loadvariables
-    printf "Uploading to Android File host (FTP)..."
-    echo
-    ncftpput -b -f ~/.afh-credentials.cfg -b / $otalocation
-    $pushbullet push all link "Upload complete: $otapackage" "http://www.androidfilehost.com"
-    }
-
-function basket-upload() {
-    loadvariables
-    printf "Uploading to BasketBuild (FTP)..."
-    echo
-    ncftpput -b -f ~/.basket-credentials.cfg -b /Krexus/$TARGET_DEVICE $otalocation
-    $pushbullet push all link "Upload complete: $otapackage" "https://basketbuild.com/devs/KreAch3R/Krexus"
-    }
-
-function pushupload() {
-# Quoting the variable because it may be empty
-    if [ "$1" == afh  ]; then
-    	pushbullet && afh-upload
-    elif [ "$1" == basket ]; then
-    	pushbullet && basket-upload
-    else
-    	pushbullet && zippy-upload
-    fi
-}
