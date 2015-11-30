@@ -1,6 +1,5 @@
 #!/bin/bash
 
-#<!--
 #     Copyright (C) 2015 KreAch3R
 #
 #     Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,9 +13,9 @@
 #     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #     See the License for the specific language governing permissions and
 #     limitations under the License.
-#-->
 
-# Version: 3.0
+
+# Version: 3.1
 # dependencies:
 # plowshare: https://github.com/mcrapet/plowshare
 # pushbullet-bash: https://github.com/Red5d/pushbullet-bash
@@ -36,10 +35,8 @@ otapackage=$(basename $otalocation)
 function pushbullet() {
     loadvariables
     if [ "$1" == channel ]; then
-	printf "Updating Pushbullet channel..."
 	$pushbullet push krexus link "OTA available!" "https://basketbuild.com/devs/KreAch3R/Krexus"
     else
-	printf "Notifying Pushbullet devices..."
 	$pushbullet push all note "OTA available!" "$otapackage created successfully."
     fi
     }
@@ -50,7 +47,6 @@ function zippy-upload() {
     echo
     exec 5>&1
     local upload_url=$(plowup zippyshare --max-rate 90k $otalocation | tee >(cat - >&5))
-    printf "Notifying Pushbullet devices..."
     $pushbullet push all link "Upload complete: $otapackage" $upload_url
     }
 
@@ -58,8 +54,7 @@ function afh-upload() {
     loadvariables
     printf "Uploading to Android File host (FTP)..."
     echo
-    ncftpput -f ~/.ftp-credentials.cfg / $otalocation
-    printf "Notifying Pushbullet devices..."
+    ncftpput -b -f ~/.afh-credentials.cfg -b / $otalocation
     $pushbullet push all link "Upload complete: $otapackage" "http://www.androidfilehost.com"
     }
 
@@ -67,8 +62,7 @@ function basket-upload() {
     loadvariables
     printf "Uploading to BasketBuild (FTP)..."
     echo
-    ncftpput -f ~/.ftp-credentials.cfg /Krexus/$TARGET_DEVICE $otalocation
-    printf "Notifying Pushbullet devices..."
+    ncftpput -b -f ~/.basket-credentials.cfg -b /Krexus/$TARGET_DEVICE $otalocation
     $pushbullet push all link "Upload complete: $otapackage" "https://basketbuild.com/devs/KreAch3R/Krexus"
     }
 
