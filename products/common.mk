@@ -33,9 +33,9 @@ PRODUCT_PACKAGES += \
     WallpaperPicker \
     Stk 
 
-# Latin IME lib
+# Latin IME lib (automatically copies the correct target arch lib)
 PRODUCT_COPY_FILES += \
-    vendor/krexus/prebuilt/common/system/lib/libjni_latinime.so:system/lib/libjni_latinime.so
+    vendor/krexus/prebuilt/$(TARGET_ARCH)/system/lib/libjni_latinime.so:system/lib${TARGET_ARCH:3}/libjni_latinime.so
 
 # Enable SIP+VoIP on all targets
 PRODUCT_COPY_FILES += \
