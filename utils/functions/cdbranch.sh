@@ -14,7 +14,7 @@
 #     See the License for the specific language governing permissions and
 #     limitations under the License.
 
-# Version: 0.2
+# Version: 0.21
 # dependencies: git
 # Info: Enhanced cd command for git repos
 # Notice: For better looking results, color the header output of git status: "git config color.status.header green"
@@ -35,12 +35,12 @@ function cdb() {
 	    if [ "$rootdirfound" ]; then
 		#Check if the folder is a git repo
 		gitfound=$( ls -a ./$1 | grep .git )
-		cd $1
+		\cd $1
 		if [ "$gitfound" ]; then
 		    git status # "status" gives out more information AND the current branch
 		fi
 	    else
-		cd $1
+		\cd $1
 	    fi
 	fi
 }
