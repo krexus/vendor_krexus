@@ -47,8 +47,9 @@ PRODUCT_COPY_FILES += \
     vendor/krexus/prebuilt/common/bin/backuptool.sh:system/bin/backuptool.sh \
     vendor/krexus/prebuilt/common/bin/backuptool.functions:system/bin/backuptool.functions
     
-# Blobs necessary for media effects
-# media effects
+# Blobs necessary for media effects for devices without a vendor partition
+ifneq ($(filter krexus_grouper krexus_hammerhead krexus_mako krexus_shamu,$(TARGET_PRODUCT)),)
 PRODUCT_COPY_FILES +=  \
     vendor/krexus/prebuilt/common/vendor/media/LMspeed_508.emd:system/vendor/media/LMspeed_508.emd \
     vendor/krexus/prebuilt/common/vendor/media/PFFprec_600.emd:system/vendor/media/PFFprec_600.emd
+endif
