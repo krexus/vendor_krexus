@@ -42,11 +42,11 @@ function prepare() {
 
 function pushbullet() {
     loadvariables
-    if [ "$1" == channel ]; then
-	$pushbullet push krexus link "OTA available!" "https://basketbuild.com/devs/KreAch3R/Krexus/$TARGET_DEVICE"
-    else
+    #if [ "$1" == channel ]; then
+	#$pushbullet push krexus link "OTA available!" "https://basketbuild.com/devs/KreAch3R/Krexus/$TARGET_DEVICE"
+    #else
 	$pushbullet push all note "OTA available!" "$otapackage created successfully."
-    fi
+    #fi
     }
 
 function pushupload() {

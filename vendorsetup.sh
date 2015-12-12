@@ -20,7 +20,7 @@ if [ -z "$variant" ]; then
 fi
 
 # add all lunch combos
-for combo in $(ls vendor/krexus/products/ | grep krexus_ | sed "s/.mk/-$variant/")
-do
+vendorsetups=($(ls vendor/krexus/products/ | grep krexus_ | sed "s/.mk/-$variant/"))
+for combo in "${vendorsetups[@]}"; do
     add_lunch_combo $combo
 done
