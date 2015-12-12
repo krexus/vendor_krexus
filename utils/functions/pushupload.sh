@@ -15,7 +15,7 @@
 #     limitations under the License.
 
 
-# Version: 3.9
+# Version: 4.2
 # dependencies:
 # plowshare: https://github.com/mcrapet/plowshare
 # pushbullet-bash: https://github.com/Red5d/pushbullet-bash
@@ -24,10 +24,13 @@
 
 # Variables
 pushbullet=$(gettop)/vendor/krexus/utils/pushbullet.sh
+basketmd5=$(gettop)/vendor/krexus/utils/basketmd5.sh
 
 function loadvariables() {
 # Check the $OUT directory for .zip files and grab the latest
 otalocation=$(find $OUT -maxdepth 1 -type f -name "*.zip" | xargs ls -t | head -n1)
+# Find the .md5 hash for the same file
+otamd5=$(cat $(echo $otalocation | sed -e 's/$/.md5sum/') | cut -f1 -d' ')
 # Strip the directory from the file name
 otapackage=$(basename $otalocation)
 }
@@ -40,7 +43,7 @@ function prepare() {
 function pushbullet() {
     loadvariables
     if [ "$1" == channel ]; then
-	$pushbullet push krexus link "OTA available!" "https://basketbuild.com/devs/KreAch3R/Krexus"
+	$pushbullet push krexus link "OTA available!" "https://basketbuild.com/devs/KreAch3R/Krexus/$TARGET_DEVICE"
     else
 	$pushbullet push all note "OTA available!" "$otapackage created successfully."
     fi
@@ -57,13 +60,28 @@ function pushupload() {
 
 function ftp-upload() {
     prepare
+    # send the ftp job for background uploading
     ncftpput -f ~/.$service-credentials.cfg -b $dir $otalocation
-    if [ $? -eq 0 ]; then
-      $pushbullet push all link "Upload complete: $otapackage" "$link"
-    else
-      echo "Upload for $TARGET_DEVICE failed. Please re-try manually!"
-    fi
-
+    # Run in background; check the upload 
+    {
+		while [[ $(tac ~/.ncftp/spool/log | grep -m 1 .) != *done* ]]; do 
+			sleep 10; 
+		done;
+		if [ "$service" == basket ]; then
+			$basketmd5 $TARGET_DEVICE $otamd5 ;
+			# check parsemd5 output
+			if [ $? -eq 0 ]; then
+				$pushbullet push all link "Upload complete: $otapackage" "$link"
+				export ${TARGET_DEVICE}_upload=success
+			else
+				echo "Upload for $TARGET_DEVICE failed. Please re-try manually!"
+				export ${TARGET_DEVICE}_upload=failure
+			fi
+		else
+		    $pushbullet push all link "Upload complete: $otapackage" "$link"
+		fi	
+	} > /dev/null 2>&1 &
+	disown
 }
 
 function afh-upload() {
@@ -76,7 +94,7 @@ function afh-upload() {
 
 function basket-upload() {
     printmessage="BasketBuild (FTP)..."
-    link="https://basketbuild.com/devs/KreAch3R/Krexus"
+    link="https://basketbuild.com/devs/KreAch3R/Krexus/$TARGET_DEVICE"
     service="basket"
     dir="/Krexus/$TARGET_DEVICE"
     ftp-upload
