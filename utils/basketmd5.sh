@@ -25,10 +25,14 @@ otamd5=$2
 site=https://basketbuild.com/devs/KreAch3R/Krexus/$TARGET_DEVICE
 remotemd5=$( echo $( curl -s $site ) | sed 's/.*data-content="\(.*\)"> View MD5.*/\1/' )
 
-echo "running"
+echo "Basketmd5 is running..."
 
 if [ "$otamd5" == "$remotemd5" ]; then
+	echo "Basketmd5: success!"
     exit 0
 else
+	echo "Basketmd5: failure"
+	echo "otamd5: "$otamd5
+	echo "remotemd5: "$remotemd5
 	exit 1
 fi

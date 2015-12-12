@@ -37,16 +37,16 @@ otapackage=$(basename $otalocation)
 
 function prepare() {
 	loadvariables
-	echo "`tput setaf 3`Uploading to $printmessage`tput sgr0`"
+	echo "${yellow}Uploading to $printmessage ${reset}"
 }
 
 function pushbullet() {
     loadvariables
-    #if [ "$1" == channel ]; then
-	#$pushbullet push krexus link "OTA available!" "https://basketbuild.com/devs/KreAch3R/Krexus/$TARGET_DEVICE"
-    #else
-	$pushbullet push all note "OTA available!" "$otapackage created successfully."
-    #fi
+    if [ "$1" == channel ]; then
+		$pushbullet push krexus link "OTA available!" "https://basketbuild.com/devs/KreAch3R/Krexus/"
+    else
+		$pushbullet push all note "OTA available!" "$otapackage created successfully."
+    fi
     }
 
 function pushupload() {
@@ -72,15 +72,15 @@ function ftp-upload() {
 			# check parsemd5 output
 			if [ $? -eq 0 ]; then
 				$pushbullet push all link "Upload complete: $otapackage" "$link"
-				export ${TARGET_DEVICE}_upload=success
+				echo "${TARGET_DEVICE}_upload=success" >> upload-status.log
 			else
 				echo "Upload for $TARGET_DEVICE failed. Please re-try manually!"
-				export ${TARGET_DEVICE}_upload=failure
+				echo "${TARGET_DEVICE}_upload=failure" >> upload-status.log
 			fi
 		else
 		    $pushbullet push all link "Upload complete: $otapackage" "$link"
 		fi	
-	} > /dev/null 2>&1 &
+	} > backgroundcommands.log 2>&1 &
 	disown
 }
 
