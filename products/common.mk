@@ -30,8 +30,9 @@ endif
 PRODUCT_PACKAGES += \
     Busybox \
     Launcher3 \
-    WallpaperPicker \
-    Stk 
+    LiveWallpapersPicker \
+    Stk \
+    WallpaperPicker
 
 # Latin IME lib (automatically copies the correct target arch lib)
 PRODUCT_COPY_FILES += \
