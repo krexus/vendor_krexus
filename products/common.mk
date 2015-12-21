@@ -15,7 +15,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.com.android.dataroaming=false \
     ro.setupwizard.network_required=false \
     ro.setupwizard.gservices_delay=-1 \
-    ro.adb.secure=1
+    ro.adb.secure=1 \
+    ro.krexus.version=krexus_mm-$(shell date +"%y%m%d")-$(TARGET_DEVICE)
 
 # Common overlay
 PRODUCT_PACKAGE_OVERLAYS += vendor/krexus/overlay/common
