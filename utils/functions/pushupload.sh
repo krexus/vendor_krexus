@@ -15,7 +15,7 @@
 #     limitations under the License.
 
 
-# Version: 4.2
+# Version: 4.21
 # dependencies:
 # plowshare: https://github.com/mcrapet/plowshare
 # pushbullet-bash: https://github.com/Red5d/pushbullet-bash
@@ -62,12 +62,16 @@ function ftp-upload() {
     prepare
     # send the ftp job for background uploading
     ncftpput -f ~/.$service-credentials.cfg -b $dir $otalocation
-    # Run in background; check the upload 
+    # Run in background; check the upload
     {
-		while [[ $(tac ~/.ncftp/spool/log | grep -m 1 .) != *done* ]]; do 
-			sleep 10; 
+    	# wait for the ncftp log to be updated
+    	sleep 10;
+		while [[ $(tac ~/.ncftp/spool/log | grep -m 1 .) != *done* ]]; do
+			sleep 10;
 		done;
 		if [ "$service" == basket ]; then
+			# sleep some more, to give time to BasketBuild to update the site about the new uploaded build.
+			sleep 10;
 			$basketmd5 $TARGET_DEVICE $otamd5 ;
 			# check parsemd5 output
 			if [ $? -eq 0 ]; then
@@ -79,7 +83,7 @@ function ftp-upload() {
 			fi
 		else
 		    $pushbullet push all link "Upload complete: $otapackage" "$link"
-		fi	
+		fi
 	} > backgroundcommands.log 2>&1 &
 	disown
 }

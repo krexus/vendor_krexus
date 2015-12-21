@@ -24,9 +24,11 @@ function release() {
    for combo in "${vendorsetups[@]}"; do
 		# We don't build grouper for now
    		if [ "$combo" != "krexus_grouper-user" ]; then
-        	lunch $combo && mka otapackage && pushupload basket
+        	lunch $combo && make deviceclean && mka otapackage && pushupload basket
         fi
    done
+   # wait for the nfctp log to be updated
+   sleep 20;
    # TO-DO: Find better way to do this, drop double code
    # Wait for the last upload to finish
    while [[ $(tac ~/.ncftp/spool/log | grep -m 1 .) != *done* ]]; do
