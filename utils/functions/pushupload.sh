@@ -15,11 +15,12 @@
 #     limitations under the License.
 
 
-# Version: 4.21
+# Version: 4.3
 # dependencies:
 # plowshare: https://github.com/mcrapet/plowshare
 # pushbullet-bash: https://github.com/Red5d/pushbullet-bash
 # ncftp: sudo apt-get install ncftp
+# xmlstarlet: sudo apt-get install xmlstarlet
 
 
 # Variables
@@ -77,6 +78,8 @@ function ftp-upload() {
 			if [ $? -eq 0 ]; then
 				$pushbullet push all link "Upload complete: $otapackage" "$link"
 				echo "${TARGET_DEVICE}_upload=success" >> upload-status.log
+				# Update the ota config file in Dropbox/Public folder
+				xmlstarlet ed -L -u "/KrexusOTA/Stable/$TARGET_DEVICE/Filename" -v "$(echo $otapackage | cut -f1 -d'.')" ~/Dropbox/Public/krexus_ota.xml
 			else
 				echo "Upload for $TARGET_DEVICE failed. Please re-try manually!"
 				echo "${TARGET_DEVICE}_upload=failure" >> upload-status.log
