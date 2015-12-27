@@ -19,6 +19,9 @@
 # dependencies: PushUpload, basketmd5, plus all their dependencies
 
 function release() {
+   # Update Dropbox Public changelog
+   export DROPBOX_CHANGELOG=true
+
    st=0
    # Start building every device
    for combo in "${vendorsetups[@]}"; do
