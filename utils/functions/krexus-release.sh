@@ -15,7 +15,7 @@
 #     limitations under the License.
 
 
-# Version: 1.0
+# Version: 1.1
 # dependencies: PushUpload, basketmd5, plus all their dependencies
 
 function release() {
@@ -35,9 +35,11 @@ function release() {
    # TO-DO: Find better way to do this, drop double code
    # Wait for the last upload to finish
    while [[ $(tac ~/.ncftp/spool/log | grep -m 1 .) != *done* ]]; do
-   # Bigger sleep value because we want the pushupload equivalent code to run first and update the upload-status.log file
+   # Bigger sleep value because we want the pushupload equivalent code to run first
 	  sleep 20;
    done;
+   # sleep some more so that the upload-status.log file is updated
+   sleep 20;
    # Source the status file
    source $(gettop)/upload-status.log
    for combo in "${vendorsetups[@]}"; do
@@ -45,6 +47,11 @@ function release() {
    		# We don't build grouper for now
    		if [ "$device" != "grouper" ]; then
 	   		upload_message=${device}_upload
+	   		# wait and re-source the log file if the variable is unset*
+	   		while [ -z "${!upload_message}" ]; do
+	   		   sleep 10;
+	   		   source $(gettop)/upload-status.log
+	   		done
 	   		[ "${!upload_message}" = "success" ]
 	   		st=$(( $? + st ))
 	   	fi
