@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#     Copyright (C) 2015 KreAch3R
+#     Copyright (C) 2016 KreAch3R, Krexus
 #
 #     Licensed under the Apache License, Version 2.0 (the "License");
 #     you may not use this file except in compliance with the License.
@@ -15,13 +15,15 @@
 #     limitations under the License.
 
 
-# Version: 4.3
+# Version: 4.41
 # dependencies:
 # plowshare: https://github.com/mcrapet/plowshare
+#            sudo apt-get install plowshare4
 # pushbullet-bash: https://github.com/Red5d/pushbullet-bash
 # ncftp: sudo apt-get install ncftp
 # xmlstarlet: sudo apt-get install xmlstarlet
-
+# Usage: pushbullet [channel]
+#        pushupload [afh/basket] (zippy is default)
 
 # Variables
 pushbullet=$(gettop)/vendor/krexus/utils/pushbullet.sh
@@ -44,9 +46,9 @@ function prepare() {
 function pushbullet() {
     loadvariables
     if [ "$1" == channel ]; then
-		$pushbullet push krexus link "OTA available!" "https://basketbuild.com/devs/KreAch3R/Krexus/"
+		$pushbullet push krexus link "OTAs available!" "$(date +"%d/%m/%y") builds are out! \n\nTap to download! \nChangelog: krexus.github.io/#changelog" "https://basketbuild.com/devs/KreAch3R/Krexus/"
     else
-		$pushbullet push all note "OTA available!" "$otapackage created successfully."
+		$pushbullet push all note "$TARGET_DEVICE: complete!" "$otapackage compiled successfully."
     fi
     }
 
@@ -76,16 +78,16 @@ function ftp-upload() {
 			$basketmd5 $TARGET_DEVICE $otamd5 ;
 			# check parsemd5 output
 			if [ $? -eq 0 ]; then
-				$pushbullet push all link "Upload complete: $otapackage" "$link"
+				$pushbullet push all link "$TARGET_DEVICE: OTA available!" "$otapackage is uploaded successfully" "$link"
 				echo "${TARGET_DEVICE}_upload=success" >> upload-status.log
 				# Update the ota config file in Dropbox/Public folder
 				xmlstarlet ed -L -u "/KrexusOTA/Stable/$TARGET_DEVICE/Filename" -v "$(echo $otapackage | cut -f1 -d'.')" ~/Dropbox/Public/krexus_ota.xml
 			else
-				echo "Upload for $TARGET_DEVICE failed. Please re-try manually!"
+				$pushbullet push all note "Upload for $TARGET_DEVICE failed!" "Please re-try manually!"
 				echo "${TARGET_DEVICE}_upload=failure" >> upload-status.log
 			fi
 		else
-		    $pushbullet push all link "Upload complete: $otapackage" "$link"
+		    $pushbullet push all link "$TARGET_DEVICE: upload complete!" "packagename: $otapackage" "$link"
 		fi
 	} > backgroundcommands.log 2>&1 &
 	disown
@@ -112,5 +114,5 @@ function zippy-upload() {
     prepare
     exec 5>&1
     local upload_url=$(plowup zippyshare --max-rate 90k $otalocation | tee >(cat - >&5))
-    $pushbullet push all link "Upload complete: $otapackage" $upload_url
+    $pushbullet push all link "$TARGET_DEVICE: upload complete!" "packagename: $otapackage" $upload_url
     }
