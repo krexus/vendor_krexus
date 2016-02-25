@@ -4,6 +4,9 @@ $(call inherit-product, device/moto/shamu/aosp_shamu.mk)
 # Inherit common product files.
 $(call inherit-product, vendor/krexus/products/common.mk)
 
+# Inherit vendor specific product files.
+$(call inherit-product, vendor/krexus/products/vendorless.mk)
+
 # Setup device specific product configuration.
 PRODUCT_NAME := krexus_shamu
 PRODUCT_BRAND := google

@@ -4,6 +4,9 @@ $(call inherit-product, device/lge/hammerhead/full_hammerhead.mk)
 # Inherit common product files.
 $(call inherit-product, vendor/krexus/products/common.mk)
 
+# Inherit vendor specific product files.
+$(call inherit-product, vendor/krexus/products/vendorless.mk)
+
 # Setup device specific product configuration.
 PRODUCT_NAME := krexus_hammerhead
 PRODUCT_BRAND := google

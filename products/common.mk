@@ -44,19 +44,8 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml
 
-# Layers Backup
-PRODUCT_COPY_FILES += \
-    vendor/krexus/prebuilt/common/addon.d/71-layers.sh:system/addon.d/71-layers.sh
-
 # Backuptool Support
 PRODUCT_COPY_FILES += \
     vendor/krexus/prebuilt/common/addon.d/50-krexus.sh:system/addon.d/50-krexus.sh \
     vendor/krexus/prebuilt/common/bin/backuptool.sh:system/bin/backuptool.sh \
     vendor/krexus/prebuilt/common/bin/backuptool.functions:system/bin/backuptool.functions
-    
-# Blobs necessary for media effects for devices without a vendor partition
-ifneq ($(filter krexus_flo krexus_grouper krexus_hammerhead krexus_mako krexus_shamu,$(TARGET_PRODUCT)),)
-PRODUCT_COPY_FILES +=  \
-    vendor/krexus/prebuilt/common/vendor/media/LMspeed_508.emd:system/vendor/media/LMspeed_508.emd \
-    vendor/krexus/prebuilt/common/vendor/media/PFFprec_600.emd:system/vendor/media/PFFprec_600.emd
-endif
