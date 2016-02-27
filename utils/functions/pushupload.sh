@@ -15,7 +15,7 @@
 #     limitations under the License.
 
 
-# Version: 4.41
+# Version: 5
 # dependencies:
 # plowshare: https://github.com/mcrapet/plowshare
 #            sudo apt-get install plowshare4
@@ -30,27 +30,27 @@ pushbullet=$(gettop)/vendor/krexus/utils/pushbullet.sh
 basketmd5=$(gettop)/vendor/krexus/utils/basketmd5.sh
 
 function loadvariables() {
-# Check the $OUT directory for .zip files and grab the latest
-otalocation=$(find $OUT -maxdepth 1 -type f -name "*.zip" | xargs ls -t | head -n1)
-# Find the .md5 hash for the same file
-otamd5=$(cat $(echo $otalocation | sed -e 's/$/.md5sum/') | cut -f1 -d' ')
-# Strip the directory from the file name
-otapackage=$(basename $otalocation)
+    # Check the $OUT directory for .zip files and grab the latest
+    otalocation=$(find $OUT -maxdepth 1 -type f -name "*.zip" | xargs ls -t | head -n1)
+    # Find the .md5 hash for the same file
+    otamd5=$(cat $(echo $otalocation | sed -e 's/$/.md5sum/') | cut -f1 -d' ')
+    # Strip the directory from the file name
+    otapackage=$(basename $otalocation)
 }
 
 function prepare() {
-	loadvariables
-	echo "${yellow}Uploading to $printmessage ${reset}"
+    loadvariables
+    echo "${yellow}Uploading to $printmessage ${reset}"
 }
 
 function pushbullet() {
     loadvariables
     if [ "$1" == channel ]; then
-		$pushbullet push krexus link "OTAs available!" "$(date +"%d/%m/%y") builds are out! \n\nTap to download! \nChangelog: krexus.github.io/#changelog" "https://basketbuild.com/devs/KreAch3R/Krexus/"
+	$pushbullet push krexus link "OTAs available!" "$(date +"%d/%m/%y") builds are out! \n\nTap to download! \nChangelog: krexus.github.io/#changelog" "$link"
     else
-		$pushbullet push all note "$TARGET_DEVICE: complete!" "$otapackage compiled successfully."
+	$pushbullet push all note "$TARGET_DEVICE: complete!" "$otapackage compiled successfully."
     fi
-    }
+}
 
 function pushupload() {
 # Quoting the variable because it may be empty
@@ -68,46 +68,55 @@ function ftp-upload() {
     # Run in background; check the upload
     {
     	# wait for the ncftp log to be updated
-    	sleep 10;
-		while [[ $(tac ~/.ncftp/spool/log | grep -m 1 .) != *done* ]]; do
-			sleep 10;
-		done;
-		if [ "$service" == basket ]; then
-			# sleep some more, to give time to BasketBuild to update the site about the new uploaded build.
-			sleep 10;
-			$basketmd5 $TARGET_DEVICE $otamd5 ;
-			# check parsemd5 output
-			if [ $? -eq 0 ]; then
-				$pushbullet push all link "$TARGET_DEVICE: OTA available!" "$otapackage is uploaded successfully" "$link"
-				echo "${TARGET_DEVICE}_upload=success" >> upload-status.log
-				# Update the ota config file in Dropbox/Public folder
-				xmlstarlet ed -L -u "/KrexusOTA/Stable/$TARGET_DEVICE/Filename" -v "$(echo $otapackage | cut -f1 -d'.')" ~/Dropbox/Public/krexus_ota.xml
-			else
-				$pushbullet push all note "Upload for $TARGET_DEVICE failed!" "Please re-try manually!"
-				echo "${TARGET_DEVICE}_upload=failure" >> upload-status.log
-			fi
-		else
-		    $pushbullet push all link "$TARGET_DEVICE: upload complete!" "packagename: $otapackage" "$link"
-		fi
-	} > backgroundcommands.log 2>&1 &
-	disown
+    	sleep 10
+	    while [[ $(tac ~/.ncftp/spool/log | grep -m 1 .) != *done* ]]; do
+	        sleep 10
+	    done
+	    if [ "$service" == basket ]; then
+                # sleep some more, to give time to BasketBuild to update the site about the new uploaded build
+                sleep 10
+                # check parsemd5 output
+                $basketmd5 $TARGET_DEVICE $otamd5
+                ftp-upload-result
+	    elif [ "$service" == afh ]; then
+                ftp-upload-result
+            fi
+    } > backgroundcommands.log 2>&1 &
+    disown
+}
+
+function ftp-upload-result() {
+    if [ $? -eq 0 ]; then
+        $pushbullet push all link "$TARGET_DEVICE: OTA available!" "$otapackage is uploaded successfully" "$link"
+        if [ "$DROPBOX_CHANGELOG" = true ]; then
+            echo "${TARGET_DEVICE}_upload=success" >> upload-status.log
+            # Update the ota config file in Dropbox/Public folder
+            xmlstarlet ed -L -u "/KrexusOTA/Stable/$TARGET_DEVICE/Filename" -v "$(echo $otapackage | cut -f1 -d'.')" ~/Dropbox/Public/krexus_ota.xml
+            xmlstarlet ed -L -u "/KrexusOTA/Stable/$TARGET_DEVICE/RomUrl" -v "$link" ~/Dropbox/Public/krexus_ota.xml
+        fi
+    else
+        $pushbullet push all note "Upload for $TARGET_DEVICE failed!" "Please re-try manually!"
+        if [ "$DROPBOX_CHANGELOG" = true ]; then
+            echo "${TARGET_DEVICE}_upload=failure" >> upload-status.log
+        fi
+    fi
 }
 
 function afh-upload() {
     printmessage="Android File host (FTP)..."
-    link="http://www.androidfilehost.com"
+    link="https://www.androidfilehost.com/?w=devices&uid=23501681358558648"
     service="afh"
     dir="/"
     ftp-upload
-    }
+}
 
 function basket-upload() {
     printmessage="BasketBuild (FTP)..."
-    link="https://basketbuild.com/devs/KreAch3R/Krexus/$TARGET_DEVICE"
+    link="https://basketbuild.com/devs/KreAch3R/Krexus"
     service="basket"
     dir="/Krexus/$TARGET_DEVICE"
     ftp-upload
-    }
+}
 
 function zippy-upload() {
     printmessage="Zippyshare..."
@@ -115,4 +124,4 @@ function zippy-upload() {
     exec 5>&1
     local upload_url=$(plowup zippyshare --max-rate 90k $otalocation | tee >(cat - >&5))
     $pushbullet push all link "$TARGET_DEVICE: upload complete!" "packagename: $otapackage" $upload_url
-    }
+}
