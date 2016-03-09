@@ -15,15 +15,16 @@
 #     limitations under the License.
 
 
-# Version: 1.0
+# Version: 2.0
 
 #DON'T change these. They are required as-is for the script to function
 TARGET_DEVICE=$1
 otamd5=$2
+otapackage=$3
 
 # Actual important variables
-site=https://basketbuild.com/devs/KreAch3R/Krexus/$TARGET_DEVICE
-remotemd5=$( echo $( curl -s $site ) | sed 's/.*data-content="\(.*\)"> View MD5.*/\1/' )
+site=https://basketbuild.com/filedl/devs?dev=KreAch3R&dl=KreAch3R/Krexus/$TARGET_DEVICE/$otapackage
+remotemd5=$( echo $( curl -s $site) | sed 's!.*MD5:</strong> \(.*\)<br/> <strong>Developer.*!\1!' )
 
 echo "Basketmd5 is running..."
 

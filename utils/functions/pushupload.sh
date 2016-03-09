@@ -76,7 +76,7 @@ function ftp-upload() {
                 # sleep some more, to give time to BasketBuild to update the site about the new uploaded build
                 sleep 10
                 # check parsemd5 output
-                $basketmd5 $TARGET_DEVICE $otamd5
+                $basketmd5 $TARGET_DEVICE $otamd5 $otapackage
                 ftp-upload-result
 	    elif [ "$service" == afh ]; then
                 ftp-upload-result
