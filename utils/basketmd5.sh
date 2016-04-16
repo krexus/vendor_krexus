@@ -23,7 +23,7 @@ otamd5=$2
 otapackage=$3
 
 # Actual important variables
-site=https://basketbuild.com/filedl/devs?dev=KreAch3R&dl=KreAch3R/Krexus/$TARGET_DEVICE/$otapackage
+site=https://basketbuild.com/filedl/devs?dev=KreAch3R\&dl=KreAch3R/Krexus/$TARGET_DEVICE/$otapackage
 remotemd5=$( echo $( curl -s $site) | sed 's!.*MD5:</strong> \(.*\)<br/> <strong>Developer.*!\1!' )
 
 echo "Basketmd5 is running..."
