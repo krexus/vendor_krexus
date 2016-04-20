@@ -4,6 +4,9 @@ $(call inherit-product, device/huawei/angler/aosp_angler.mk)
 # Inherit common product files.
 $(call inherit-product, vendor/krexus/products/common.mk)
 
+# Inherit maintainer information (if exists).
+$(call inherit-product-if-exists, device/huawei/angler/krexus_maintainer.mk)
+
 # Setup device specific product configuration.
 PRODUCT_NAME := krexus_angler
 PRODUCT_BRAND := google

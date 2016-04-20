@@ -4,6 +4,9 @@ $(call inherit-product, device/lge/bullhead/aosp_bullhead.mk)
 # Inherit common product files.
 $(call inherit-product, vendor/krexus/products/common.mk)
 
+# Inherit maintainer information (if exists).
+$(call inherit-product-if-exists, device/lge/bullhead/krexus_maintainer.mk)
+
 # Setup device specific product configuration.
 PRODUCT_NAME := krexus_bullhead
 PRODUCT_BRAND := google
