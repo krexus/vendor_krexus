@@ -20,5 +20,5 @@ PRODUCT_MANUFACTURER := asus
 # Fingerprint
 PRODUCT_BUILD_PROP_OVERRIDES += \
     PRODUCT_NAME=razor \
-    BUILD_FINGERPRINT=google/razor/flo:6.0.1/MMB29X/2704508:user/release-keys$
-    PRIVATE_BUILD_DESC="razor-user 6.0.1 MMB29X 2704508 release-keys"
+    BUILD_FINGERPRINT=google/razor/flo:6.0.1/MOB30J/2775141:user/release-keys \
+    PRIVATE_BUILD_DESC="razor-user 6.0.1 MOB30J 2775141 release-keys"
