@@ -30,6 +30,7 @@ endif
 # Extra Packages
 PRODUCT_PACKAGES += \
     Busybox \
+    CellBroadcastReceiver \
     KrexusOTA \
     Launcher3 \
     LiveWallpapersPicker \
