@@ -15,9 +15,9 @@
 #     limitations under the License.
 
 
-# Version: 1.5
+# Version: 2.0
 # dependencies: PushUpload, basketmd5, plus all their dependencies
-# Usage: release [afh/basket]
+# Usage: release [afh/basket] [DEVICE_NAME]
 
 function release() {
    # Check for upload service
@@ -32,12 +32,36 @@ function release() {
    # Setting upload success/failure value
    st=0
 
-   # Start building every device
+   # Create the device array
+   devices=()
    for combo in "${vendorsetups[@]}"; do
-       # We don't build grouper for now
-       if [ "$combo" != "krexus_grouper-user" ]; then
-           lunch $combo && make deviceclean && mka otapackage && pushupload $1
+       device=$(echo $combo | sed 's/.*_\(.*\)-.*/\1/')
+       if [[ "$device" = "$2" ]] ; then
+           devices=$2
+           break
+       else
+           devices+=($device)
        fi
+   done
+
+   # Don't build the devices here
+   if [[ $# -lt 2 ]] ; then
+       notbuilt=("grouper" "flounder")
+       for del in "${notbuilt[@]}"; do
+           devices=(${devices[@]/$del})
+       done
+   fi
+
+   # Notify of specific device release
+   if [[ $# -eq 2 ]] ; then
+       echo "${green}You are releasing a $2 build!${reset}"
+   else
+       echo "${green}You are releasing builds for: ${devices[@]}!${reset}"
+   fi
+
+   # Start building
+   for device in "${devices[@]}"; do
+       lunch krexus_$device-$variant && make deviceclean && mka otapackage && pushupload $1
    done
 
    # wait for the nfctp log to be updated
@@ -53,19 +77,15 @@ function release() {
 
    # Source the status file
    source $(gettop)/upload-status.log
-   for combo in "${vendorsetups[@]}"; do
-       device=$(echo $combo | sed 's/.*_\(.*\)-.*/\1/')
-       # We don't build grouper for now
-       if [ "$device" != "grouper" ]; then
-          upload_message=${device}_upload
-	  # wait and re-source the log file if the variable is unset*
-	  while [ -z "${!upload_message}" ]; do
-	      sleep 10;
-	      source $(gettop)/upload-status.log
-	  done
-	  [ "${!upload_message}" = "success" ]
-	  st=$(( $? + st ))
-       fi
+   for device in "${devices[@]}"; do
+       upload_message=${device}_upload
+       # wait and re-source the log file if the variable is unset*
+       while [ -z "${!upload_message}" ]; do
+           sleep 10;
+           source $(gettop)/upload-status.log
+       done
+       [ "${!upload_message}" = "success" ]
+       st=$(( $? + st ))
    done
 
    # Notify about the result
