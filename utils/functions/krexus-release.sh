@@ -90,8 +90,7 @@ function release() {
 
    # Notify about the result
    if [ $st -eq 0 ]; then
-       echo "${green}All uploads were successful, we are notifying the pushbullet channel now...${reset}"
-       pushbullet channel
+       echo "${green}All uploads were successful!${reset}"
    else
        echo "${red}Something went bad with the uploads, you should re-try manually${reset}"
    fi
