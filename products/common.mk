@@ -31,7 +31,6 @@ endif
 PRODUCT_PACKAGES += \
     Busybox \
     CellBroadcastReceiver \
-    KrexusOTA \
     Launcher3 \
     LiveWallpapersPicker \
     Stk \
