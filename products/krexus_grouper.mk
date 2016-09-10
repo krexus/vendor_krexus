@@ -20,5 +20,5 @@ PRODUCT_MANUFACTURER := asus
 # Fingerprint
 PRODUCT_BUILD_PROP_OVERRIDES += \
     PRODUCT_NAME=grouper \
-    BUILD_FINGERPRINT=google/nakasi/grouper:6.0.1/MOB30Y/3067468:user/release-keys \
-    PRIVATE_BUILD_DESC="nakasi-user 6.0.1 MOB30Y 3067468 release-keys"
+    BUILD_FINGERPRINT=google/nakasi/grouper:6.0.1/MOB31E/3142026:user/release-keys \
+    PRIVATE_BUILD_DESC="nakasi-user 6.0.1 MOB31E 3142026 release-keys"
