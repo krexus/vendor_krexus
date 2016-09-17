@@ -3,4 +3,4 @@
 
 
 BOARD_SEPOLICY_DIRS += \
-    $(call my-dir)
+    vendor/krexus/sepolicy

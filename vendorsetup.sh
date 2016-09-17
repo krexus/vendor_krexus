@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#     Copyright (C) 2015 KreAch3R
+#     Copyright (C) 2016 KreAch3R
 #
 #     Licensed under the Apache License, Version 2.0 (the "License");
 #     you may not use this file except in compliance with the License.
@@ -14,13 +14,15 @@
 #     See the License for the specific language governing permissions and
 #     limitations under the License.
 
+scriptdir=`dirname "$BASH_SOURCE"`
+
 # if variant variable is unset, use "user" as default
 if [ -z "$variant" ]; then
     export variant=user
 fi
 
 # add all lunch combos
-vendorsetups=($(ls $(call my-dir)/products/ | grep krexus_ | sed "s/.mk/-$variant/"))
+vendorsetups=($(ls $scriptdir/products/ | grep krexus_ | sed "s/.mk/-$variant/"))
 for combo in "${vendorsetups[@]}"; do
     add_lunch_combo $combo
 done

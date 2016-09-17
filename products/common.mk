@@ -1,3 +1,5 @@
+PRODUCT_BRAND ?= krexus
+
 PRODUCT_PROPERTY_OVERRIDES += \
     keyguard.no_require_sim=true \
     ro.url.legal=http://www.google.com/intl/%s/mobile/android/basic/phone-legal.html \
@@ -6,15 +8,19 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.com.android.wifi-watchlist=GoogleGuest \
     ro.com.android.dataroaming=false \
     ro.setupwizard.network_required=false \
+    ro.setupwizard.enterprise_mode=1 \
     ro.error.receiver.system.apps=com.google.android.gms \
     ro.atrace.core.services=com.google.android.gms,com.google.android.gms.ui,com.google.android.gms.persistent \
     ro.adb.secure=1 \
-    ro.krexus.version=krexus_mm-$(shell date +"%y%m%d")-$(TARGET_DEVICE)
+    ro.krexus.version=krexus_n-$(shell date +"%y%m%d")-$(TARGET_DEVICE)
+
+# Common overlay
+PRODUCT_PACKAGE_OVERLAYS += vendor/krexus/overlay/common
 
 # Bootanimation (add if it exists)
-ifneq ($(wildcard $(call my-dir)/../prebuilt/bootanimation/$(TARGET_DEVICE).zip),)
+ifneq ($(wildcard vendor/krexus/prebuilt/bootanimation/$(TARGET_DEVICE).zip),)
 PRODUCT_COPY_FILES += \
-        $(call my-dir)/../prebuilt/bootanimation/$(TARGET_DEVICE).zip:system/media/bootanimation.zip
+        vendor/krexus/prebuilt/bootanimation/$(TARGET_DEVICE).zip:system/media/bootanimation.zip
 endif
 
 # Extra Packages
@@ -32,8 +38,14 @@ PRODUCT_COPY_FILES += \
 # Latin IME lib
 ifneq ($(filter arm,$(TARGET_ARCH)),)
 PRODUCT_COPY_FILES += \
-    $(call my-dir)/..prebuilt/common/lib/libjni_latinime.so:system/lib/libjni_latinime.so
+    vendor/krexus/prebuilt/common/lib/libjni_latinime.so:system/lib/libjni_latinime.so
 else
 PRODUCT_COPY_FILES += \
-    $(call my-dir)/..prebuilt/common/lib64/libjni_latinime.so:system/lib64/libjni_latinime.so
+    vendor/krexus/prebuilt/common/lib64/libjni_latinime.so:system/lib64/libjni_latinime.so
 endif
+
+# Backuptool Support
+PRODUCT_COPY_FILES += \
+    vendor/krexus/prebuilt/common/addon.d/50-krexus.sh:system/addon.d/50-krexus.sh \
+    vendor/krexus/prebuilt/common/bin/backuptool.sh:system/bin/backuptool.sh \
+    vendor/krexus/prebuilt/common/bin/backuptool.functions:system/bin/backuptool.functions
