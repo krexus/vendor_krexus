@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2011 The Android Open Source Project
+<!-- Copyright (C) 2009 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -15,9 +15,26 @@
 -->
 
 <favorites xmlns:launcher="http://schemas.android.com/apk/res-auto/com.android.launcher3">
-    <!-- Update the db with new hotseat items.  Note that we reference the browser's original
-         package name. -->
+    <!-- Far-left screen [0] -->
+
+    <!-- Left screen [1] -->
+
+    <!-- Middle screen [2] -->
+    <appwidget
+        launcher:packageName="com.android.deskclock"
+        launcher:className="com.android.alarmclock.DigitalAppWidgetProvider"
+        launcher:screen="2"
+        launcher:x="0"
+        launcher:y="0"
+        launcher:spanX="4"
+        launcher:spanY="2" />
+
+    <!-- Right screen [3] -->
+
+    <!-- Far-right screen [4] -->
+
     <!-- Hotseat (We use the screen as the position of the item in the hotseat) -->
+    <!-- Dialer, Contacts, [All Apps], Messaging, Browser -->
     <favorite
             launcher:packageName="com.android.dialer"
             launcher:className="com.android.dialer.DialtactsActivity"
@@ -25,7 +42,7 @@
             launcher:screen="0"
             launcher:x="0"
             launcher:y="0" />
-            
+
         <favorite
             launcher:packageName="com.android.contacts"
             launcher:className="com.android.contacts.activities.PeopleActivity"
@@ -33,7 +50,7 @@
             launcher:screen="1"
             launcher:x="1"
             launcher:y="0" />
-            
+
         <favorite
             launcher:packageName="com.android.documentsui"
             launcher:className="com.android.documentsui.DocumentsActivity"
@@ -41,7 +58,7 @@
             launcher:screen="3"
             launcher:x="3"
             launcher:y="0" />
-            
+
         <favorite
             launcher:packageName="com.android.settings"
             launcher:className="com.android.settings.Settings"
@@ -49,5 +66,5 @@
             launcher:screen="4"
             launcher:x="4"
             launcher:y="0" />
-            
+
 </favorites>
