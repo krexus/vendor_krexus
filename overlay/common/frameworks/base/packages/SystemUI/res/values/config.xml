@@ -4,4 +4,7 @@
 
     <!-- Show voice assist affordance on Keyguard -->
     <bool name="config_keyguardShowVoiceAssistAffordance">false</bool>
+
+    <!-- Show full date and alarm in all screen sizes -->
+    <bool name="quick_settings_show_full_alarm">true</bool>
 </resources>
