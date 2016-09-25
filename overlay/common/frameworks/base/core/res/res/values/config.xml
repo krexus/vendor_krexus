@@ -50,4 +50,11 @@
         <item>com.google.android.apps.tycho</item>
     </string-array>
 
+   <!-- Enforce strong auth on boot. Setting this to false represents a security risk and should
+         not be ordinarily done. The only case in which this might be permissible is in a car head
+         unit where there are hardware mechanisms to protect the device (physical keys) and not
+         much in the way of user data.
+    -->
+    <bool name="config_strongAuthRequiredOnBoot">false</bool>
+
 </resources>
