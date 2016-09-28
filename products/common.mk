@@ -11,7 +11,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.setupwizard.enterprise_mode=1 \
     ro.error.receiver.system.apps=com.google.android.gms \
     ro.atrace.core.services=com.google.android.gms,com.google.android.gms.ui,com.google.android.gms.persistent \
-    ro.adb.secure=1 \
     ro.krexus.version=krexus_n-$(shell date +"%y%m%d")-$(TARGET_DEVICE)
 
 # Common overlay
