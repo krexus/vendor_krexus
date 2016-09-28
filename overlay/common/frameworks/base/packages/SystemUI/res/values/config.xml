@@ -12,4 +12,7 @@
     <string name="quick_settings_tiles_default" translatable="false">
         wifi,cell,battery,bt,location,rotation,dnd,airplane,flashlight
     </string>
+
+    <!-- Nav bar button default ordering/layout -->
+    <string name="config_navBarLayout" translatable="false">space,back;home;recent,space</string>
 </resources>
