@@ -36,8 +36,10 @@ PRODUCT_PACKAGES += \
     WallpaperPicker
 
 # Include librsjni explicitly to workaround GMS issue
+# Include libprotobuf-cpp-full explicitly to work around Facelock issues
 PRODUCT_PACKAGES += \
-    librsjni
+    librsjni \
+    libprotobuf-cpp-full
 
 # Enable SIP+VoIP on all targets
 PRODUCT_COPY_FILES += \
