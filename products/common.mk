@@ -10,6 +10,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.opa.eligible_device=true \
     ro.setupwizard.network_required=false \
     ro.setupwizard.enterprise_mode=1 \
+    ro.setupwizard.rotation_locked=true \
     ro.error.receiver.system.apps=com.google.android.gms \
     ro.atrace.core.services=com.google.android.gms,com.google.android.gms.ui,com.google.android.gms.persistent \
     ro.krexus.version=krexus_n-$(shell date +"%y%m%d")-$(TARGET_DEVICE)
