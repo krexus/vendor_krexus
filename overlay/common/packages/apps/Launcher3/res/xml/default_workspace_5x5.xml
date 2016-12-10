@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2009 The Android Open Source Project
+<!-- Copyright (C) 2016 Krexus
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -52,8 +52,16 @@
             launcher:y="0" />
 
         <favorite
+            launcher:packageName="com.google.android.GoogleCamera"
+            launcher:className="com.android.camera.activity.main.CameraActivity"
+            launcher:container="-101"
+            launcher:screen="2"
+            launcher:x="1"
+            launcher:y="0" />
+
+        <favorite
             launcher:packageName="com.android.documentsui"
-            launcher:className="com.android.documentsui.DocumentsActivity"
+            launcher:className="com.android.documentsui.FilesActivity"
             launcher:container="-101"
             launcher:screen="3"
             launcher:x="3"
