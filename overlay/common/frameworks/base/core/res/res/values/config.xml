@@ -79,4 +79,7 @@
         <item>com.google.android.gms</item>
     </string-array>
 
+    <!-- default dnd access packages -->
+    <string name="config_defaultDndAccessPackages">com.google.android.GoogleCamera</string>
+
 </resources>
