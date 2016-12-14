@@ -20,9 +20,6 @@ scriptdir=`dirname "$BASH_SOURCE"`
 if [ -z "$variant" ]; then
     export variant=user
 fi
-if [ $variant != "user" ]; then
-    export BUILD_TAG=$variant
-fi
 
 # add all lunch combos
 vendorsetups=($(ls $scriptdir/products/ | grep krexus_ | sed "s/.mk/-$variant/"))
