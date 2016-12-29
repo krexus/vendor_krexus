@@ -7,9 +7,6 @@ $(call inherit-product, vendor/krexus/products/common.mk)
 # Inherit vendor specific product files.
 $(call inherit-product, vendor/krexus/products/vendorless.mk)
 
-# Inherit maintainer information (if exists).
-$(call inherit-product-if-exists, device/lge/mako/krexus_maintainer.mk)
-
 # Setup device specific product configuration.
 PRODUCT_NAME := krexus_mako
 PRODUCT_BRAND := google
