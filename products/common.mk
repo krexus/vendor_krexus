@@ -20,10 +20,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PACKAGE_OVERLAYS += vendor/krexus/overlay/common
 
 # Bootanimation (add if it exists)
-ifneq ($(wildcard vendor/krexus/prebuilt/bootanimation/$(TARGET_DEVICE).zip),)
-PRODUCT_COPY_FILES += \
-        vendor/krexus/prebuilt/bootanimation/$(TARGET_DEVICE).zip:system/media/bootanimation.zip
-endif
+#ifneq ($(wildcard vendor/krexus/prebuilt/bootanimation/$(TARGET_DEVICE).zip),)
+#PRODUCT_COPY_FILES += \
+#        vendor/krexus/prebuilt/bootanimation/$(TARGET_DEVICE).zip:system/media/bootanimation.zip
+#endif
 
 # Extra Packages
 PRODUCT_PACKAGES += \
