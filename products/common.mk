@@ -59,3 +59,6 @@ PRODUCT_COPY_FILES += \
     vendor/krexus/prebuilt/common/addon.d/50-krexus.sh:system/addon.d/50-krexus.sh \
     vendor/krexus/prebuilt/common/bin/backuptool.sh:system/bin/backuptool.sh \
     vendor/krexus/prebuilt/common/bin/backuptool.functions:system/bin/backuptool.functions
+
+# Inherit specific private product files, if they exist.
+$(call inherit-product-if-exists, vendor/priv/main.mk)
