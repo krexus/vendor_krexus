@@ -33,7 +33,6 @@ PRODUCT_PACKAGES += \
     Launcher3 \
     LiveWallpapersPicker \
     Stk \
-    SystemUpdates \
     WallpaperPicker
 
 # Include librsjni explicitly to workaround GMS issue
