@@ -1,6 +1,7 @@
 PRODUCT_BRAND ?= krexus
 
 PRODUCT_PROPERTY_OVERRIDES += \
+    audio.safemedia.bypass=true \
     keyguard.no_require_sim=true \
     net.tethering.noprovisioning=true \
     persist.sys.dun.override=0 \
