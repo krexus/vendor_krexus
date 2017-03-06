@@ -31,10 +31,10 @@ endif
 PRODUCT_PACKAGES += \
     Busybox \
     CellBroadcastReceiver \
-    Masquerade \
     Launcher3 \
     LiveWallpapersPicker \
     Stk \
+    ThemeInterfacer \
     WallpaperPicker
 
 # Include librsjni explicitly to workaround GMS issue
