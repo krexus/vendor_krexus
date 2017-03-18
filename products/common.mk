@@ -62,5 +62,9 @@ PRODUCT_COPY_FILES += \
     vendor/krexus/prebuilt/common/bin/backuptool.sh:system/bin/backuptool.sh \
     vendor/krexus/prebuilt/common/bin/backuptool.functions:system/bin/backuptool.functions
 
+# Set Pixel blue light theme on Gboard
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.com.google.ime.theme_id=5
+
 # Inherit specific private product files, if they exist.
 $(call inherit-product-if-exists, vendor/priv/main.mk)
