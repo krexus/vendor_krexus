@@ -19,7 +19,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.krexus.version=krexus_n-$(shell date +"%y%m%d")-$(TARGET_DEVICE)
 
 # Common overlay
-PRODUCT_PACKAGE_OVERLAYS += vendor/krexus/overlay/common
+# PRODUCT_PACKAGE_OVERLAYS += vendor/krexus/overlay/common
 
 # Bootanimation (add if it exists)
 ifneq ($(wildcard vendor/krexus/prebuilt/bootanimation/$(TARGET_DEVICE).zip),)
