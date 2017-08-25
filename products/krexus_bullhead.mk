@@ -7,7 +7,7 @@ $(call inherit-product, vendor/krexus/products/common.mk)
 # Setup device specific product configuration.
 PRODUCT_NAME := krexus_bullhead
 PRODUCT_BRAND := google
-PRODUCT_DEVICE := bullhead
+TARGET_DEVICE := bullhead
 PRODUCT_MODEL := Nexus 5X
 PRODUCT_MANUFACTURER := LGE
 

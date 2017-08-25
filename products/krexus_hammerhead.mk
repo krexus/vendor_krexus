@@ -10,7 +10,7 @@ $(call inherit-product, vendor/krexus/products/vendorless.mk)
 # Setup device specific product configuration.
 PRODUCT_NAME := krexus_hammerhead
 PRODUCT_BRAND := google
-PRODUCT_DEVICE := hammerhead
+TARGET_DEVICE := hammerhead
 PRODUCT_MODEL := Nexus 5
 PRODUCT_MANUFACTURER := LGE
 

@@ -7,7 +7,7 @@ $(call inherit-product, vendor/krexus/products/common.mk)
 # Setup device specific product configuration.
 PRODUCT_NAME := krexus_angler
 PRODUCT_BRAND := google
-PRODUCT_DEVICE := angler
+TARGET_DEVICE := angler
 PRODUCT_MODEL := Nexus 6P
 PRODUCT_MANUFACTURER := Huawei
 
