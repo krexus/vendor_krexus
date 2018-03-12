@@ -79,8 +79,9 @@ PRODUCT_PACKAGES += \
 
 # Extra Optional packages
 PRODUCT_PACKAGES += \
+    BluetoothExt \
     LatinIME \
-    BluetoothExt
+    RootlessPixelLauncher
 
 
 # Extra tools
