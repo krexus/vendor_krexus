@@ -64,19 +64,9 @@ PRODUCT_COPY_FILES += \
     vendor/gzosp/prebuilt/common/etc/init.d/90userinit:system/etc/init.d/90userinit \
     vendor/gzosp/prebuilt/common/bin/sysinit:system/bin/sysinit
 
-# Required packages
-PRODUCT_PACKAGES += \
-    CellBroadcastReceiver \
-    Development \
-    SpareParts \
-    LockClock \
-    su
-
 # Optional packages
 PRODUCT_PACKAGES += \
-    Basic \
-    LiveWallpapersPicker \
-    PhaseBeam
+    LiveWallpapersPicker
 
 # Include explicitly to work around GMS issues
 PRODUCT_PACKAGES += \
@@ -89,7 +79,6 @@ PRODUCT_PACKAGES += \
 
 # Extra Optional packages
 PRODUCT_PACKAGES += \
-    Calculator \
     LatinIME \
     BluetoothExt
 
