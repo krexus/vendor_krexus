@@ -20,26 +20,26 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Backup tool
 PRODUCT_COPY_FILES += \
-    vendor/gzosp/prebuilt/common/bin/backuptool.sh:install/bin/backuptool.sh \
-    vendor/gzosp/prebuilt/common/bin/backuptool.functions:install/bin/backuptool.functions \
-    vendor/gzosp/prebuilt/common/bin/50-gzosp.sh:system/addon.d/50-gzosp.sh \
-    vendor/gzosp/prebuilt/common/bin/clean_cache.sh:system/bin/clean_cache.sh
+    vendor/krexus/prebuilt/common/bin/backuptool.sh:install/bin/backuptool.sh \
+    vendor/krexus/prebuilt/common/bin/backuptool.functions:install/bin/backuptool.functions \
+    vendor/krexus/prebuilt/common/bin/50-gzosp.sh:system/addon.d/50-gzosp.sh \
+    vendor/krexus/prebuilt/common/bin/clean_cache.sh:system/bin/clean_cache.sh
 
 # Backup services whitelist
 PRODUCT_COPY_FILES += \
-    vendor/gzosp/config/permissions/backup.xml:system/etc/sysconfig/backup.xml
+    vendor/krexus/config/permissions/backup.xml:system/etc/sysconfig/backup.xml
 
 # Signature compatibility validation
 PRODUCT_COPY_FILES += \
-    vendor/gzosp/prebuilt/common/bin/otasigcheck.sh:install/bin/otasigcheck.sh
+    vendor/krexus/prebuilt/common/bin/otasigcheck.sh:install/bin/otasigcheck.sh
 
 # Gzosp-specific init file
 PRODUCT_COPY_FILES += \
-    vendor/gzosp/prebuilt/common/etc/init.local.rc:root/init.gzosp.rc
+    vendor/krexus/prebuilt/common/etc/init.local.rc:root/init.gzosp.rc
 
 # SELinux filesystem labels
 PRODUCT_COPY_FILES += \
-    vendor/gzosp/prebuilt/common/etc/init.d/50selinuxrelabel:system/etc/init.d/50selinuxrelabel
+    vendor/krexus/prebuilt/common/etc/init.d/50selinuxrelabel:system/etc/init.d/50selinuxrelabel
 
 # Enable SIP+VoIP on all targets
 PRODUCT_COPY_FILES += \
@@ -47,18 +47,18 @@ PRODUCT_COPY_FILES += \
 
 # Don't export PS1 in /system/etc/mkshrc.
 PRODUCT_COPY_FILES += \
-    vendor/gzosp/prebuilt/common/etc/mkshrc:system/etc/mkshrc \
-    vendor/gzosp/prebuilt/common/etc/sysctl.conf:system/etc/sysctl.conf
+    vendor/krexus/prebuilt/common/etc/mkshrc:system/etc/mkshrc \
+    vendor/krexus/prebuilt/common/etc/sysctl.conf:system/etc/sysctl.conf
 
 # Fix Dialer
 PRODUCT_COPY_FILES +=  \
-    vendor/gzosp/prebuilt/common/sysconfig/dialer_experience.xml:system/etc/sysconfig/dialer_experience.xml
+    vendor/krexus/prebuilt/common/sysconfig/dialer_experience.xml:system/etc/sysconfig/dialer_experience.xml
 
 # Gzosp-specific startup services
 PRODUCT_COPY_FILES += \
-    vendor/gzosp/prebuilt/common/etc/init.d/00banner:system/etc/init.d/00banner \
-    vendor/gzosp/prebuilt/common/etc/init.d/90userinit:system/etc/init.d/90userinit \
-    vendor/gzosp/prebuilt/common/bin/sysinit:system/bin/sysinit
+    vendor/krexus/prebuilt/common/etc/init.d/00banner:system/etc/init.d/00banner \
+    vendor/krexus/prebuilt/common/etc/init.d/90userinit:system/etc/init.d/90userinit \
+    vendor/krexus/prebuilt/common/bin/sysinit:system/bin/sysinit
 
 # Include explicitly to work around GMS issues
 PRODUCT_PACKAGES += \
@@ -110,12 +110,12 @@ PRODUCT_PACKAGES += \
     AndroidDarkThemeOverlay \
     SettingsDarkThemeOverlay
 
-PRODUCT_PACKAGE_OVERLAYS += vendor/gzosp/overlay/common
+PRODUCT_PACKAGE_OVERLAYS += vendor/krexus/overlay/common
 
 # Bootanimation (add if it exists)
-ifneq ($(wildcard vendor/gzosp/prebuilt/bootanimation/$(TARGET_DEVICE).zip),)
+ifneq ($(wildcard vendor/krexus/prebuilt/bootanimation/$(TARGET_DEVICE).zip),)
 PRODUCT_COPY_FILES += \
-        vendor/gzosp/prebuilt/bootanimation/$(TARGET_DEVICE).zip:system/media/bootanimation.zip
+        vendor/krexus/prebuilt/bootanimation/$(TARGET_DEVICE).zip:system/media/bootanimation.zip
 endif
 
 # Versioning System
@@ -144,10 +144,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.gzosp.buildtype=$(GZOSP_BUILD_TYPE)
 
 # Google sounds
-include vendor/gzosp/google/GoogleAudio.mk
+include vendor/krexus/google/GoogleAudio.mk
 
 # Set Pixel blue light theme on Gboard
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.com.google.ime.theme_id=5
 
-EXTENDED_POST_PROCESS_PROPS := vendor/gzosp/tools/gzosp_process_props.py
+EXTENDED_POST_PROCESS_PROPS := vendor/krexus/tools/gzosp_process_props.py

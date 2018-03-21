@@ -5,7 +5,7 @@ function gzosp_device_combos()
     local T list_file variant device
 
     T="$(gettop)"
-    list_file="${T}/vendor/gzosp/gzosp.devices"
+    list_file="${T}/vendor/krexus/gzosp.devices"
     variant="userdebug"
 
     if [[ $1 ]]
@@ -27,7 +27,7 @@ function gzosp_device_combos()
     if [[ ! -f "${list_file}" ]]
     then
         echo "unable to find device list: ${list_file}"
-        list_file="${T}/vendor/gzosp/gzosp.devices"
+        list_file="${T}/vendor/krexus/gzosp.devices"
         echo "defaulting device list file to: ${list_file}"
     fi
 
@@ -179,8 +179,8 @@ function hmm() #hidden
     original_gzosp_hmm
     echo
 
-    echo "vendor/gzosp extended functions. The complete list is:"
-    for i in $(grep -P '^function .*$' "$T/vendor/gzosp/build/envsetup.sh" | grep -v "#hidden" | sed 's/function \([a-z_]*\).*/\1/' | sort | uniq); do
+    echo "vendor/krexus extended functions. The complete list is:"
+    for i in $(grep -P '^function .*$' "$T/vendor/krexus/build/envsetup.sh" | grep -v "#hidden" | sed 's/function \([a-z_]*\).*/\1/' | sort | uniq); do
         echo "$i"
     done |column
 }
